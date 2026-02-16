@@ -1,0 +1,456 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  Loader2,
+  CheckCircle,
+  AlertCircle,
+  Clock,
+  Upload,
+  FileText,
+  BrainCircuit,
+  Network,
+  Sparkles,
+  Rocket,
+  Zap,
+  Activity,
+  Cpu,
+  Gauge
+} from 'lucide-react';
+import { useUploadWebSocket } from '@/hooks/useUploadWebSocket';
+import { cn } from '@/lib/utils';
+
+interface ProcessingProgressProps {
+  documentId: string;
+  filename: string;
+  onComplete?: () => void;
+}
+
+const PROCESSING_STEPS = [
+  {
+    id: 1,
+    name: 'Uploading to Storage',
+    icon: Upload,
+    gradient: 'from-blue-500 to-cyan-500',
+    bgLight: 'bg-blue-50',
+    bgDark: 'dark:bg-blue-950/30',
+    textLight: 'text-blue-600',
+    textDark: 'dark:text-blue-400',
+    weight: 10
+  },
+  {
+    id: 2,
+    name: 'Creating Document Record',
+    icon: FileText,
+    gradient: 'from-green-500 to-emerald-500',
+    bgLight: 'bg-green-50',
+    bgDark: 'dark:bg-green-950/30',
+    textLight: 'text-green-600',
+    textDark: 'dark:text-green-400',
+    weight: 10
+  },
+  {
+    id: 3,
+    name: 'Extracting Text Content',
+    icon: FileText,
+    gradient: 'from-purple-500 to-pink-500',
+    bgLight: 'bg-purple-50',
+    bgDark: 'dark:bg-purple-950/30',
+    textLight: 'text-purple-600',
+    textDark: 'dark:text-purple-400',
+    weight: 15
+  },
+  {
+    id: 4,
+    name: 'Creating Knowledge Chunks',
+    icon: BrainCircuit,
+    gradient: 'from-amber-500 to-orange-500',
+    bgLight: 'bg-amber-50',
+    bgDark: 'dark:bg-amber-950/30',
+    textLight: 'text-amber-600',
+    textDark: 'dark:text-amber-400',
+    weight: 15
+  },
+  {
+    id: 5,
+    name: 'Generating AI Embeddings',
+    icon: Sparkles,
+    gradient: 'from-pink-500 to-rose-500',
+    bgLight: 'bg-pink-50',
+    bgDark: 'dark:bg-pink-950/30',
+    textLight: 'text-pink-600',
+    textDark: 'dark:text-pink-400',
+    weight: 25
+  },
+  {
+    id: 6,
+    name: 'Building Knowledge Graph',
+    icon: Network,
+    gradient: 'from-indigo-500 to-purple-500',
+    bgLight: 'bg-indigo-50',
+    bgDark: 'dark:bg-indigo-950/30',
+    textLight: 'text-indigo-600',
+    textDark: 'dark:text-indigo-400',
+    weight: 15
+  },
+  {
+    id: 7,
+    name: 'Finalizing Document',
+    icon: Rocket,
+    gradient: 'from-emerald-500 to-teal-500',
+    bgLight: 'bg-emerald-50',
+    bgDark: 'dark:bg-emerald-950/30',
+    textLight: 'text-emerald-600',
+    textDark: 'dark:text-emerald-400',
+    weight: 10
+  },
+];
+
+export function ProcessingProgress({ documentId, filename, onComplete }: ProcessingProgressProps) {
+  const [userId, setUserId] = useState<string>('');
+  const [completed, setCompleted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Get user ID from localStorage
+  useEffect(() => {
+    const token = localStorage.getItem('auth_token');
+
+    if (token) {
+      try {
+        if (token.startsWith('eyJ')) {
+          const parts = token.split('.');
+          if (parts.length === 3) {
+            const payload = JSON.parse(atob(parts[1]));
+            const userId = payload.sub || payload.user_id || payload.userId || payload.id || 'current-user';
+            setUserId(userId);
+          } else {
+            setUserId('current-user');
+          }
+        } else {
+          const parsed = JSON.parse(token);
+          const userId = parsed?.user?.id || parsed?.userId || parsed?.sub || parsed?.id || 'current-user';
+          setUserId(userId);
+        }
+      } catch (error) {
+        console.error('Failed to parse token:', error);
+        setUserId('current-user');
+      }
+    } else {
+      setUserId('current-user');
+    }
+  }, []);
+
+  // Use WebSocket for live updates
+  const {
+    isConnected,
+    progress,
+    estimatedTime,
+    reconnect
+  } = useUploadWebSocket({
+    documentId,
+    userId,
+    onProgress: (data) => {
+      console.log('Progress update:', data);
+    },
+    onComplete: (data) => {
+      setCompleted(true);
+      if (onComplete) onComplete();
+    },
+    onError: (error) => {
+      setError(error);
+    }
+  });
+
+  // Calculate current step
+  const currentStep = progress?.step || 1;
+  const currentProgress = progress?.progress || 0;
+  const currentMessage = progress?.message || 'Starting processing...';
+
+  const getStepStatus = (stepId: number) => {
+    if (stepId < currentStep) return 'completed';
+    if (stepId === currentStep) return 'current';
+    return 'pending';
+  };
+
+  const getStepIcon = (stepId: number, step: typeof PROCESSING_STEPS[0]) => {
+    const status = getStepStatus(stepId);
+    switch (status) {
+      case 'completed':
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
+      case 'current':
+        return <Loader2 className="h-5 w-5 animate-spin text-blue-500" />;
+      default:
+        return <step.icon className="h-5 w-5 text-gray-400 dark:text-gray-600" />;
+    }
+  };
+
+  // Show loading while getting user ID
+  if (!userId) {
+    return (
+      <div className="text-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
+        <p className="text-muted-foreground">Loading user information...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 py-6 sm:py-8 md:py-12 px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
+        {/* Header with Gradient */}
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 dark:from-blue-500/5 dark:to-purple-500/5 border border-blue-200/50 dark:border-blue-800/50 backdrop-blur-sm">
+            {isConnected ? (
+              <>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-25"></div>
+                  <div className="relative h-2 w-2 rounded-full bg-green-500"></div>
+                </div>
+                <span className="text-sm font-medium bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
+                  Live Processing
+                </span>
+              </>
+            ) : (
+              <>
+                <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+                <span className="text-sm font-medium text-amber-600 dark:text-amber-400">
+                  Connecting...
+                </span>
+              </>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+              Processing Document
+            </h1>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-4">
+              Your document <span className="font-semibold text-blue-600 dark:text-blue-400">"{filename}"</span> is being transformed into an intelligent knowledge graph
+            </p>
+          </div>
+
+          {/* Stats Badges */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
+            <Badge variant="outline" className="px-3 py-1.5 bg-white dark:bg-gray-900">
+              <Activity className="h-3.5 w-3.5 mr-1.5 text-blue-500" />
+              <span className="text-xs font-medium">Real-time</span>
+            </Badge>
+            <Badge variant="outline" className="px-3 py-1.5 bg-white dark:bg-gray-900">
+              <Cpu className="h-3.5 w-3.5 mr-1.5 text-purple-500" />
+              <span className="text-xs font-medium">AI Powered</span>
+            </Badge>
+            <Badge variant="outline" className="px-3 py-1.5 bg-white dark:bg-gray-900">
+              <Gauge className="h-3.5 w-3.5 mr-1.5 text-green-500" />
+              <span className="text-xs font-medium">High Performance</span>
+            </Badge>
+          </div>
+        </div>
+
+        {/* Error Display */}
+        {error && (
+          <Alert variant="destructive" className="border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/30">
+            <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+            <AlertDescription className="text-red-700 dark:text-red-300">
+              {error}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Completion Message */}
+        {completed && (
+          <Alert className="border-green-200 dark:border-green-900 bg-green-50 dark:bg-green-950/30">
+            <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+            <AlertDescription className="text-green-700 dark:text-green-300">
+              Document processing completed! Redirecting to document page...
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Main Progress Card */}
+        <Card className="border-0 shadow-xl bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm overflow-hidden">
+          {/* Top Gradient Bar */}
+          <div className="h-1.5 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+
+          <CardHeader className="px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-200 dark:border-gray-800">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <CardTitle className="text-lg sm:text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+                Processing Pipeline
+              </CardTitle>
+              <div className="flex flex-wrap items-center gap-2">
+                {estimatedTime && (
+                  <Badge variant="outline" className="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-gray-800">
+                    <Clock className="h-3.5 w-3.5 text-blue-500" />
+                    <span className="text-xs font-medium">{estimatedTime} remaining</span>
+                  </Badge>
+                )}
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "px-3 py-1.5",
+                    isConnected
+                      ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300"
+                      : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300"
+                  )}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <div className={cn(
+                      "h-2 w-2 rounded-full",
+                      isConnected ? "bg-green-500 animate-pulse" : "bg-amber-500 animate-pulse"
+                    )} />
+                    <span className="text-xs font-medium">{isConnected ? 'Live' : 'Offline'}</span>
+                  </div>
+                </Badge>
+              </div>
+            </div>
+          </CardHeader>
+
+          <CardContent className="p-4 sm:p-6 space-y-6">
+            {/* Overall Progress Bar */}
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Overall Progress</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    {currentProgress.toFixed(1)}%
+                  </span>
+                  <Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0">
+                    {PROCESSING_STEPS.find(s => s.id === currentStep)?.name || 'Processing'}
+                  </Badge>
+                </div>
+              </div>
+              <div className="relative">
+                <Progress value={currentProgress} className="h-3 bg-gray-200 dark:bg-gray-800" />
+                <div
+                  className="absolute top-0 left-0 h-3 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-500"
+                  style={{ width: `${currentProgress}%` }}
+                />
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 text-center animate-pulse">
+                {currentMessage}
+              </p>
+            </div>
+
+            {/* Step-by-Step Progress */}
+            <div className="space-y-4">
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                <Zap className="h-4 w-4 text-amber-500" />
+                Processing Steps
+              </h3>
+              <div className="relative">
+                {/* Vertical Line - Hidden on mobile, shown on larger screens */}
+                <div className="hidden sm:block absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500" />
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                  {PROCESSING_STEPS.map((step) => {
+                    const status = getStepStatus(step.id);
+                    return (
+                      <div
+                        key={step.id}
+                        className={cn(
+                          "relative flex items-start gap-3 p-4 rounded-xl border transition-all duration-300",
+                          status === 'completed' && "border-green-200 dark:border-green-900 bg-green-50/50 dark:bg-green-950/20",
+                          status === 'current' && "border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/20 shadow-lg scale-[1.02]",
+                          status === 'pending' && "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
+                        )}
+                      >
+                        {/* Step Number Badge */}
+                        <div className={cn(
+                          "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold",
+                          status === 'completed' && "bg-green-500 text-white",
+                          status === 'current' && "bg-blue-500 text-white animate-pulse",
+                          status === 'pending' && "bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                        )}>
+                          {step.id}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <h4 className={cn(
+                              "text-sm font-medium truncate",
+                              status === 'completed' && "text-green-700 dark:text-green-400",
+                              status === 'current' && "text-blue-700 dark:text-blue-400",
+                              status === 'pending' && "text-gray-700 dark:text-gray-300"
+                            )}>
+                              {step.name}
+                            </h4>
+                            <span className="text-xs text-gray-500 dark:text-gray-400 ml-2 shrink-0">
+                              {step.weight}%
+                            </span>
+                          </div>
+
+                          {/* Progress indicator for current step */}
+                          {status === 'current' && (
+                            <div className="mt-2">
+                              <div className="h-1 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
+                                <div
+                                  className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500"
+                                  style={{
+                                    width: `${((currentProgress - PROCESSING_STEPS.slice(0, step.id - 1).reduce((acc, s) => acc + s.weight, 0)) / step.weight) * 100}%`
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Status Icon */}
+                        <div className="shrink-0">
+                          {status === 'completed' && (
+                            <CheckCircle className="h-5 w-5 text-green-500" />
+                          )}
+                          {status === 'current' && (
+                            <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
+                          )}
+                          {status === 'pending' && (
+                            <div className="h-5 w-5 rounded-full border-2 border-gray-300 dark:border-gray-700" />
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-200 dark:border-gray-800">
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                <BrainCircuit className="h-4 w-4 text-purple-500" />
+                You can leave this page - processing will continue in the background
+              </p>
+              <Button
+                variant="outline"
+                onClick={reconnect}
+                disabled={isConnected}
+                className="w-full sm:w-auto"
+              >
+                {isConnected ? (
+                  <>
+                    <div className="h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse" />
+                    Connected
+                  </>
+                ) : (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Reconnect
+                  </>
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Background Decoration */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-amber-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+      </div>
+    </div>
+  );
+}
