@@ -46,7 +46,7 @@ const getUserIdFromToken = (): string | null => {
                 const payload = JSON.parse(payloadJson);
 
                 if (payload.sub) {
-                    console.log(`✅ Found user ID ${payload.sub} from ${key}`);
+                    //console.log(`✅ Found user ID ${payload.sub} from ${key}`);
                     return payload.sub;
                 }
             } catch (error) {

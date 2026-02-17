@@ -37,6 +37,9 @@ export default function GlobalGraphPage() {
     const [recentDocs, setRecentDocs] = useState<RecentDocument[]>([]);
     const [loading, setLoading] = useState(true);
     const [documents, setDocuments] = useState<Document[]>([]);
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
+
 
     useEffect(() => {
         fetchGraphData();
@@ -47,7 +50,7 @@ export default function GlobalGraphPage() {
             setLoading(true);
             const token = localStorage.getItem('auth_token');
 
-            const docsResponse = await fetch('http://localhost:5000/api/documents', {
+            const docsResponse = await fetch(`${API_URL}/api/documents`, {
                 headers: { 'Authorization': `Bearer ${token}` },
             });
 

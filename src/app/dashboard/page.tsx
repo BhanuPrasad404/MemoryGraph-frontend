@@ -25,9 +25,7 @@ import { formatBytes, formatDate } from '@/lib/utils';
 import { useEffect, useMemo, useState } from 'react';
 import { AxiosError } from 'axios';
 
-/* =======================
-   Types
-======================= */
+
 
 type DocumentStatus = 'completed' | 'processing' | 'failed';
 
@@ -42,9 +40,7 @@ interface Document {
     num_edges?: number;
 }
 
-/* =======================
-   Page Component
-======================= */
+
 
 export default function DashboardPage() {
     const [tokenLoaded, setTokenLoaded] = useState(false);
@@ -75,9 +71,6 @@ export default function DashboardPage() {
 
     const documents = documentsData ?? [];
 
-    /* =======================
-       Derived Stats (Memoized)
-    ======================== */
 
     const stats = useMemo(() => ({
         totalDocuments: documents.length,
@@ -89,9 +82,7 @@ export default function DashboardPage() {
         totalEdges: documents.reduce((sum, doc) => sum + (doc.num_edges ?? 0), 0),
     }), [documents]);
 
-    /* =======================
-       Status Badge
-    ======================== */
+   
 
     const getStatusBadge = (status: DocumentStatus) => {
         const variants = {

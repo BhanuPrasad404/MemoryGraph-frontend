@@ -79,6 +79,7 @@ export default function DocumentsPage() {
     const [offset, setOffset] = useState(0);
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [refreshing, setRefreshing] = useState(false);
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
     const limit = 10;
 
@@ -106,7 +107,7 @@ export default function DocumentsPage() {
             });
 
             const response = await fetch(
-                `http://localhost:5000/api/documents?${params.toString()}`,
+                `${API_BASE_URL}/api/documents?${params.toString()}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -182,7 +183,7 @@ export default function DocumentsPage() {
             }
 
             const response = await fetch(
-                `http://localhost:5000/api/documents/${documentId}`,
+                `${API_BASE_URL}/api/documents/${documentId}`,
                 {
                     method: 'DELETE',
                     headers: {
@@ -222,9 +223,8 @@ export default function DocumentsPage() {
             }
 
             toast.info('Preparing export...');
-
             const response = await fetch(
-                `http://localhost:5000/api/documents/${documentId}/export?format=${format}`,
+                `${API_BASE_URL}/api/documents/${documentId}/export?format=${format}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,

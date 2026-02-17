@@ -39,6 +39,7 @@ export default function ChatInterface({
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
     // Auto-scroll to bottom
     useEffect(() => {
@@ -198,7 +199,7 @@ export default function ChatInterface({
                 requestBody.documentId = documentId;
             }
 
-            const response = await fetch('http://localhost:5000/api/chat/query', {
+            const response = await fetch(`${API_BASE_URL}/api/chat/query`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

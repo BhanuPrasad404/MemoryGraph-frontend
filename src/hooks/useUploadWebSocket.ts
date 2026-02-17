@@ -33,6 +33,7 @@ export function useUploadWebSocket({
   const [isConnected, setIsConnected] = useState(false);
   const [progress, setProgress] = useState<ProgressData | null>(null);
   const [estimatedTime, setEstimatedTime] = useState<string>('');
+  const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
     if (!documentId || !userId) return;
@@ -43,13 +44,13 @@ export function useUploadWebSocket({
       socketRef.current = null;
     }
     // In useUploadWebSocket hook, improve options:
-    const socket = io('http://localhost:5000', {
+    const socket = io(SOCKET_URL, {
       transports: ['websocket'],
       reconnection: true,
-      reconnectionAttempts: 10,  // Try 10 times
-      reconnectionDelay: 1000,   // Wait 1 second
-      reconnectionDelayMax: 5000, // Max 5 seconds
-      timeout: 20000,           // 20 second timeout
+      reconnectionAttempts: 10,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000,
     });
 
     socketRef.current = socket;

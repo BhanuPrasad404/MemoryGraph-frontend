@@ -118,7 +118,7 @@ export default function SourcesPanel({ sources, documentId, documentName, isMobi
                                 <Card key={docId} className="overflow-hidden hover:shadow-sm transition-shadow">
                                     <CardContent className="p-3 sm:p-4">
                                         {/* Document Header */}
-                                        <div 
+                                        <div
                                             className="flex items-center justify-between mb-2 cursor-pointer"
                                             onClick={() => shouldCollapse && toggleDocument(docId)}
                                         >
@@ -163,8 +163,8 @@ export default function SourcesPanel({ sources, documentId, documentName, isMobi
                                                 >
                                                     <div className="flex items-center justify-between mb-1">
                                                         <div className="flex items-center gap-1.5 flex-wrap">
-                                                            <Badge 
-                                                                variant="outline" 
+                                                            <Badge
+                                                                variant="outline"
                                                                 className="text-xs font-normal"
                                                                 style={{
                                                                     backgroundColor: `rgba(34, 197, 94, ${source.similarity})`,

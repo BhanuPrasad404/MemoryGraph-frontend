@@ -71,6 +71,7 @@ export default function DocumentDetailPage() {
     const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState('overview');
     const [deleting, setDeleting] = useState(false);
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
     // Fetch document details
     const fetchDocument = async () => {
@@ -82,14 +83,13 @@ export default function DocumentDetailPage() {
             }
 
             const response = await fetch(
-                `http://localhost:5000/api/documents/${documentId}`,
+                `${API_BASE_URL}/api/documents/${documentId}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },
                 }
             );
-
             if (!response.ok) {
                 if (response.status === 404) {
                     throw new Error('Document not found');
@@ -123,7 +123,7 @@ export default function DocumentDetailPage() {
             }
 
             const response = await fetch(
-                `http://localhost:5000/api/graph/document/${documentId}`,
+                `${API_BASE_URL}/api/graph/document/${documentId}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -168,7 +168,7 @@ export default function DocumentDetailPage() {
             }
 
             const response = await fetch(
-                `http://localhost:5000/api/documents/${documentId}`,
+                `${API_BASE_URL}/api/documents/${documentId}`,
                 {
                     method: 'DELETE',
                     headers: {
@@ -357,30 +357,30 @@ export default function DocumentDetailPage() {
             {/* Document Info - Mobile responsive grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
                 {/* Document Info Card */}
-             <Card className="bg-white border border-gray-200 shadow-md">
-    <CardHeader className="pb-2 sm:pb-3 px-3 sm:px-6 border-b border-gray-200">
-        <CardTitle className="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-2">
-            <FileText className="h-4 w-4 text-blue-600" />
-            Document Info
-        </CardTitle>
-    </CardHeader>
-    <CardContent className="px-3 sm:px-6 pt-4">
-        <div className="space-y-2">
-            <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-                <span className="text-sm text-gray-500">File Size</span>
-                <span className="text-sm font-medium text-gray-900">{formatBytes(document.file_size)}</span>
-            </div>
-            <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-                <span className="text-sm text-gray-500">Uploaded</span>
-                <span className="text-sm font-medium text-gray-900">{formatDate(document.created_at)}</span>
-            </div>
-            <div className="flex items-center justify-between py-2">
-                <span className="text-sm text-gray-500">Last Updated</span>
-                <span className="text-sm font-medium text-gray-900">{formatDate(document.updated_at)}</span>
-            </div>
-        </div>
-    </CardContent>
-</Card>
+                <Card className="bg-white border border-gray-200 shadow-md">
+                    <CardHeader className="pb-2 sm:pb-3 px-3 sm:px-6 border-b border-gray-200">
+                        <CardTitle className="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-2">
+                            <FileText className="h-4 w-4 text-blue-600" />
+                            Document Info
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="px-3 sm:px-6 pt-4">
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                                <span className="text-sm text-gray-500">File Size</span>
+                                <span className="text-sm font-medium text-gray-900">{formatBytes(document.file_size)}</span>
+                            </div>
+                            <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                                <span className="text-sm text-gray-500">Uploaded</span>
+                                <span className="text-sm font-medium text-gray-900">{formatDate(document.created_at)}</span>
+                            </div>
+                            <div className="flex items-center justify-between py-2">
+                                <span className="text-sm text-gray-500">Last Updated</span>
+                                <span className="text-sm font-medium text-gray-900">{formatDate(document.updated_at)}</span>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
 
                 {/* Processing Stats Card */}
                 <Card className="bg-white border border-gray-200 shadow-md">

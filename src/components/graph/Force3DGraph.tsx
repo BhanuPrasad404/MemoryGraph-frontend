@@ -65,6 +65,7 @@ export default function AdvancedKnowledgeGraph({
     const [showMobileDetails, setShowMobileDetails] = useState(false);
     const [hoveredNode, setHoveredNode] = useState<any>(null);
     const [hoveredLink, setHoveredLink] = useState<any>(null);
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
     const graphRef = useRef<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -87,9 +88,9 @@ export default function AdvancedKnowledgeGraph({
             try {
                 let apiUrl = '';
                 if (documentId) {
-                    apiUrl = `http://localhost:5000/api/graph/document/${documentId}`;
+                    apiUrl = `${API_BASE_URL}/api/graph/document/${documentId}`;
                 } else {
-                    apiUrl = 'http://localhost:5000/api/graph/user';
+                    apiUrl = `${API_BASE_URL}/api/graph/user`;
                 }
 
                 const token = localStorage.getItem('auth_token');

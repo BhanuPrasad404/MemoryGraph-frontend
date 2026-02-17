@@ -30,6 +30,7 @@ export function UserProfile() {
     const [loading, setLoading] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
     useEffect(() => {
         loadUserData();
@@ -76,7 +77,7 @@ export function UserProfile() {
             const token = localStorage.getItem('auth_token');
             if (!token) return;
 
-            const response = await fetch('http://localhost:5000/api/documents?limit=1&offset=0', {
+            const response = await fetch(`${API_BASE_URL}/api/documents?limit=1&offset=0`, {
                 headers: { 'Authorization': `Bearer ${token}` },
             });
 

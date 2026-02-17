@@ -28,6 +28,7 @@ export default function SettingsPage() {
     const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const { theme, setTheme } = useTheme();
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
     useEffect(() => {
         fetchUserProfile();
@@ -45,7 +46,7 @@ export default function SettingsPage() {
                 return;
             }
 
-            const response = await fetch('http://localhost:5000/api/user/profile', {
+            const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
@@ -86,7 +87,7 @@ export default function SettingsPage() {
                 throw new Error('No authentication token found');
             }
 
-            const response = await fetch('http://localhost:5000/api/user/profile', {
+            const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -135,7 +136,7 @@ export default function SettingsPage() {
             setDeleting(true);
             const token = localStorage.getItem('auth_token');
 
-            const response = await fetch('http://localhost:5000/api/user/account', {
+            const response = await fetch(`${API_BASE_URL}/api/user/account`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
