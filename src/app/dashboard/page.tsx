@@ -49,7 +49,7 @@ export default function DashboardPage() {
     useEffect(() => {
         const token = apiClient.loadToken();
         console.log('[Dashboard] Token loaded:', token);
-        console.log('[Dashboard] localStorage token:', localStorage.getItem('token'));
+        console.log('[Dashboard] localStorage token:', localStorage.getItem('auth_token'));
 
         if (!token) {
             window.location.href = '/login';
