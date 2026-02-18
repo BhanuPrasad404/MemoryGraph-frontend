@@ -1,12 +1,14 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { supabase } from '@/lib/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-export default function VerifyOtpPage() {
+// Separate component that uses useSearchParams
+function VerifyOTPContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const email = searchParams.get('email') || '';
@@ -48,5 +50,18 @@ export default function VerifyOtpPage() {
                 {loading ? 'Verifying...' : 'Verify OTP'}
             </Button>
         </form>
+    );
+}
+
+// Main page component with Suspense boundary
+export default function VerifyOtpPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="text-center">Loading verification page...</div>
+            </div>
+        }>
+            <VerifyOTPContent />
+        </Suspense>
     );
 }
