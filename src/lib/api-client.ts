@@ -203,25 +203,26 @@ export class ApiClient {
     return expiration < new Date();
   }
 
-  // Auto-check token expiration on app load
+  // Auto-check token expiration on app load - DISABLED for now
   setupTokenExpirationCheck() {
     if (typeof window === 'undefined') return;
 
+    // 🔴 DISABLED - This was causing logout loop
     // Check immediately
-    if (this.isTokenExpired() && this.isAuthenticated()) {
-      console.log('🔐 Token expired on app load');
-      this.showAuthExpiredMessage();
-      this.clearToken();
-    }
+    // if (this.isTokenExpired() && this.isAuthenticated()) {
+    //   console.log('🔐 Token expired on app load');
+    //   this.showAuthExpiredMessage();
+    //   this.clearToken();
+    // }
 
-    // Set up periodic check (every 30 seconds)
-    setInterval(() => {
-      if (this.isTokenExpired() && this.isAuthenticated()) {
-        console.log('🔐 Token expired during session');
-        this.showAuthExpiredMessage();
-        this.clearToken();
-      }
-    }, 30000); // 30 seconds
+    // Set up periodic check (every 30 seconds) - DISABLED
+    // setInterval(() => {
+    //   if (this.isTokenExpired() && this.isAuthenticated()) {
+    //     console.log('🔐 Token expired during session');
+    //     this.showAuthExpiredMessage();
+    //     this.clearToken();
+    //   }
+    // }, 30000); // 30 seconds
   }
 
   async login(email: string, password: string): Promise<ApiResponse> {
@@ -416,7 +417,8 @@ export class ApiClient {
 // Singleton export
 export const apiClient = new ApiClient();
 
+// 🔴 DISABLED - This was causing logout loop
 // Initialize token expiration check when module loads in browser
-if (typeof window !== 'undefined') {
-  apiClient.setupTokenExpirationCheck();
-}
+// if (typeof window !== 'undefined') {
+//   apiClient.setupTokenExpirationCheck();
+// }
