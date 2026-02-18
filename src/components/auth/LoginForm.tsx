@@ -28,7 +28,7 @@ export function LoginForm() {
       if (data.success) {
         apiClient.setToken(data.data.token);
         toast.success('Welcome back!');
-        window.location.href = 'https://memory-graph-frontend-r18d.vercel.app/dashboard';
+        router.push('/dashboard');
       } else {
         toast.error(data.error || 'Login failed');
       }
