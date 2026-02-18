@@ -56,7 +56,11 @@ export class ApiClient {
           this.clearToken();
 
           // Redirect to login page after a delay
-        
+          setTimeout(() => {
+            if (typeof window !== 'undefined') {
+              window.location.href = '/login';
+            }
+          }, 2000);
 
           return Promise.reject(new Error('Session expired. Please login again.'));
         }
