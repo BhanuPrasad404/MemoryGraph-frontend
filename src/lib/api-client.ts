@@ -2,8 +2,8 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import { toast } from 'sonner';
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE_URL = 'https://memorygraph.onrender.com';
+
 
 interface ApiResponse<T = any> {
   success: boolean;
@@ -46,7 +46,7 @@ export class ApiClient {
         const originalRequest = error.config as any;
 
         // Handle 401 Unauthorized errors
-        
+
         if (error.response?.status === 401) {
           console.log('🔐 401 received - but ignoring for now');
           return Promise.reject(error);
