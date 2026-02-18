@@ -48,14 +48,16 @@ export default function DashboardPage() {
     // Proper token loading with redirect
     useEffect(() => {
         const token = apiClient.loadToken();
-        console.log('[Dashboard] Token loaded before query:', token);
+        console.log('[Dashboard] Token loaded:', token);
+        console.log('[Dashboard] localStorage token:', localStorage.getItem('token'));
+
         if (!token) {
-            // Redirect to login if no token found
             window.location.href = '/login';
         } else {
             setTokenLoaded(true);
         }
     }, []);
+
 
     // Do not run query until token is confirmed
     const {
@@ -82,7 +84,7 @@ export default function DashboardPage() {
         totalEdges: documents.reduce((sum, doc) => sum + (doc.num_edges ?? 0), 0),
     }), [documents]);
 
-   
+
 
     const getStatusBadge = (status: DocumentStatus) => {
         const variants = {
@@ -192,7 +194,7 @@ export default function DashboardPage() {
                             <div className="text-2xl sm:text-3xl font-bold text-white">{stats.totalDocuments}</div>
                             <span className="text-xs text-blue-200">total</span>
                         </div>
-                       
+
                     </CardContent>
                 </Card>
 
