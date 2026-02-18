@@ -2,7 +2,10 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import { toast } from 'sonner';
 
-const API_BASE_URL = 'https://memorygraph.onrender.com';
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+console.log("Final API_BASE_URL:", API_BASE_URL);
 
 
 interface ApiResponse<T = any> {
