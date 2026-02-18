@@ -46,23 +46,10 @@ export class ApiClient {
         const originalRequest = error.config as any;
 
         // Handle 401 Unauthorized errors
+        
         if (error.response?.status === 401) {
-          console.log('🔐 401 received - authentication expired');
-
-          // Show user-friendly message
-          this.showAuthExpiredMessage();
-
-          // Clear tokens
-          this.clearToken();
-
-          // Redirect to login page after a delay
-          setTimeout(() => {
-            if (typeof window !== 'undefined') {
-              window.location.href = '/login';
-            }
-          }, 2000);
-
-          return Promise.reject(new Error('Session expired. Please login again.'));
+          console.log('🔐 401 received - but ignoring for now');
+          return Promise.reject(error);
         }
 
         // Handle other errors with user-friendly messages
