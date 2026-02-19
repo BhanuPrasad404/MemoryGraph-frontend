@@ -64,7 +64,7 @@ export default function DashboardPage() {
             }
 
             setTokenLoaded(true);
-        }, 0);
+        }, 1000);
 
         return () => clearTimeout(timer);
     }, [hydrated, router]);
