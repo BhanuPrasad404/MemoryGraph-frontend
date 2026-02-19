@@ -55,7 +55,7 @@ export default function DashboardPage() {
 
         if (!token) {
             console.log('[Dashboard] No token, redirecting...');
-            router.push('/login');
+            router.replace('/login');
             return;
         }
 
