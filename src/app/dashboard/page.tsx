@@ -49,19 +49,21 @@ export default function DashboardPage() {
 
     // Proper token loading with redirect
     useEffect(() => {
-        const token = apiClient.loadToken();
-        console.log('[Dashboard] Token loaded:', token);
-        console.log('[Dashboard] localStorage token:', localStorage.getItem('auth_token'));
+        const timer = setTimeout(() => {
+            const token = apiClient.loadToken();
+            console.log('[Dashboard] Token loaded:', token);
 
-        if (!token) {
-            console.log('[Dashboard] No token, redirecting...');
-            router.replace('/login');
-            return;
-        }
+            if (!token) {
+                router.replace('/login');
+                return;
+            }
 
-        setTokenLoaded(true);
+            setTokenLoaded(true);
+        }, 0); // microtask delay
 
-    }, []);
+        return () => clearTimeout(timer);
+    }, [router]);
+
 
     // Do not run query until token is confirmed
     const {
