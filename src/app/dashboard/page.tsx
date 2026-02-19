@@ -24,6 +24,7 @@ import { useQuery } from '@tanstack/react-query';
 import { formatBytes, formatDate } from '@/lib/utils';
 import { useEffect, useMemo, useState } from 'react';
 import { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -43,6 +44,7 @@ interface Document {
 
 
 export default function DashboardPage() {
+    const router = useRouter()
     const [tokenLoaded, setTokenLoaded] = useState(false);
 
     // Proper token loading with redirect
@@ -52,12 +54,14 @@ export default function DashboardPage() {
         console.log('[Dashboard] localStorage token:', localStorage.getItem('auth_token'));
 
         if (!token) {
-            window.location.href = '/login';
-        } else {
-            setTokenLoaded(true);
+            console.log('[Dashboard] No token, redirecting...');
+            router.push('/login');
+            return;
         }
-    }, []);
 
+        setTokenLoaded(true);
+
+    }, []);
 
     // Do not run query until token is confirmed
     const {
