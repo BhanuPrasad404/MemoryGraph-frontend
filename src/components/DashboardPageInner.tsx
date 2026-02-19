@@ -210,13 +210,30 @@ export default function DashboardPage() {
                                 <div className="text-2xl sm:text-3xl font-bold text-white">{stats.totalChunks}</div>
                                 <span className="text-xs text-purple-200">chunks</span>
                             </div>
-                            <div className="flex items-center gap-3 mt-2">
-                                <div className="flex items-center gap-1">
+
+                            {/* Mobile-friendly stats with better wrapping */}
+                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
+                                {/* AI ready indicator */}
+                                <div className="flex items-center gap-1 shrink-0">
                                     <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                                    <span className="text-xs text-white/70">AI ready</span>
+                                    <span className="text-xs text-white/70 whitespace-nowrap">AI ready</span>
                                 </div>
-                                <span className="text-xs text-white/70">•</span>
-                                <span className="text-xs text-white/70">indexed</span>
+
+                                {/* Dot separator - hidden on very small screens if needed */}
+                                <span className="text-xs text-white/70 hidden xs:inline">•</span>
+
+                                {/* Indexed text */}
+                                <span className="text-xs text-white/70 whitespace-nowrap">indexed</span>
+
+                                {/* Optional: Add more stats that wrap on mobile */}
+                                {stats.totalChunks > 0 && (
+                                    <>
+                                        <span className="text-xs text-white/70 hidden sm:inline">•</span>
+                                        <span className="text-xs text-white/70 w-full xs:w-auto mt-1 xs:mt-0">
+                                            ~{(stats.totalChunks / (stats.totalDocuments || 1)).toFixed(1)} avg per doc
+                                        </span>
+                                    </>
+                                )}
                             </div>
                         </CardContent>
                     </Card>
@@ -384,14 +401,13 @@ export default function DashboardPage() {
                             <Link href="/documents">
                                 <Button
                                     variant="outline"
-                                   className="w-full text-xs sm:text-sm h-8 sm:h-10 border-gray-700 text-gray-300 bg-gray-800 hover:border-gray-600 transition-colors"
+                                    className="w-full text-xs sm:text-sm h-8 sm:h-10 border-gray-700 text-gray-300 bg-gray-800 hover:border-gray-600 transition-colors"
                                 >
                                     <span className="truncate">Go to Search</span>
                                 </Button>
                             </Link>
                         </CardContent>
                     </Card>
-
                     {/* Chat with AI Card */}
                     <Card className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-all duration-200 hover:-translate-y-1">
                         <CardHeader className="px-3 sm:px-6">
