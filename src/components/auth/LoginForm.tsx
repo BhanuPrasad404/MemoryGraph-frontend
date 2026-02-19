@@ -25,14 +25,24 @@ export function LoginForm() {
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       apiClient.login(email, password),
     onSuccess: (data) => {
+      console.log("LOGIN SUCCESS DATA:", data);
+
       if (data.success) {
-        apiClient.setToken(data.data.token);
+        try {
+          apiClient.setToken(data.data.token);
+          console.log("TOKEN SET SUCCESS");
+        } catch (e) {
+          console.error("TOKEN SET FAILED:", e);
+        }
+
         toast.success('Welcome back!');
+        console.log("PUSHING TO DASHBOARD");
         router.push('/dashboard');
       } else {
         toast.error(data.error || 'Login failed');
       }
     },
+
     onError: (error: any) => {
       const message = error.response?.data?.error || 'Login failed. Please try again.';
       toast.error(message);
