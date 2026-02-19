@@ -75,13 +75,13 @@ export function LoginForm() {
 
         {/* Main heading with gradient */}
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
-          <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             Welcome back
           </span>
         </h1>
 
         {/* Subtitle with subtle gradient */}
-        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-sm mx-auto relative">
+        <p className="text-sm sm:text-base text-gray-500 max-w-sm mx-auto relative">
           <span className="relative inline-block">
             Enter your credentials to continue
             <span className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent" />
@@ -90,58 +90,69 @@ export function LoginForm() {
 
         {/* Decorative dots */}
         <div className="flex justify-center gap-2 mt-4">
-          <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-          <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse delay-150" />
-          <div className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse delay-300" />
+          <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+          <div className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse delay-150" />
+          <div className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse delay-300" />
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Sign in to your account</CardTitle>
+      <Card className="border-0 bg-gray-900/90 backdrop-blur-sm shadow-2xl shadow-purple-500/5 overflow-hidden">
+        {/* Top gradient bar */}
+        <div className="h-1 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+        
+        <CardHeader className="border-b border-gray-800">
+          <CardTitle className="text-lg text-gray-100">Sign in to your account</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email address</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={formData.email}
-                onChange={handleChange}
-                disabled={loginMutation.isPending}
-                required
-                autoComplete="email"
-              />
+              <Label htmlFor="email" className="text-gray-300">Email address</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  disabled={loginMutation.isPending}
+                  required
+                  autoComplete="email"
+                  className="pl-10 bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-600 focus:border-gray-600 focus:ring-1 focus:ring-gray-600"
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-gray-300">Password</Label>
                 <Link
                   href="/forgot-password"
-                  className="text-xs text-primary hover:underline"
+                  className="text-xs text-purple-400 hover:text-purple-300 hover:underline transition-colors"
                 >
                   Forgot password?
                 </Link>
               </div>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleChange}
-                disabled={loginMutation.isPending}
-                required
-                autoComplete="current-password"
-              />
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleChange}
+                  disabled={loginMutation.isPending}
+                  required
+                  autoComplete="current-password"
+                  className="pl-10 bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-600 focus:border-gray-600 focus:ring-1 focus:ring-gray-600"
+                />
+              </div>
             </div>
 
             {loginMutation.isError && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
+              <Alert variant="destructive" className="border-red-900 bg-red-950/50">
+                <AlertCircle className="h-4 w-4 text-red-400" />
+                <AlertDescription className="text-red-300">
                   {loginMutation.error?.response?.data?.error || 'Login failed'}
                 </AlertDescription>
               </Alert>
@@ -149,7 +160,7 @@ export function LoginForm() {
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white border-0 shadow-lg shadow-purple-600/20 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
               disabled={loginMutation.isPending}
             >
               {loginMutation.isPending ? (
@@ -164,10 +175,10 @@ export function LoginForm() {
           </form>
 
           <div className="mt-6 text-center text-sm">
-            <span className="text-muted-foreground">Don't have an account? </span>
+            <span className="text-gray-500">Don't have an account? </span>
             <Link
               href="/signup"
-              className="font-medium text-primary hover:underline"
+              className="font-medium text-purple-400 hover:text-purple-300 hover:underline transition-colors"
             >
               Sign up
             </Link>

@@ -304,11 +304,11 @@ export default function ChatInterface({
     // Show loading while fetching history
     if (isLoadingHistory) {
         return (
-            <div className={`flex flex-col h-full min-h-[500px] ${className}`}>
+            <div className={`flex flex-col h-full min-h-[500px] bg-gray-900 rounded-xl border border-gray-800 ${className}`}>
                 <div className="flex-1 flex items-center justify-center">
                     <div className="flex flex-col items-center gap-4">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                        <p className="text-muted-foreground">Loading chat history...</p>
+                        <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+                        <p className="text-gray-500">Loading chat history...</p>
                     </div>
                 </div>
             </div>
@@ -316,18 +316,20 @@ export default function ChatInterface({
     }
 
     return (
-        <div className={`flex flex-col h-full min-h-[500px] sm:min-h-[550px] md:min-h-[600px] ${className}`}>
+        <div className={`flex flex-col h-full min-h-[500px] sm:min-h-[550px] md:min-h-[600px] bg-gray-900 rounded-xl border border-gray-800 overflow-hidden ${className}`}>
             {/* Header - Responsive */}
-            <div className="flex items-center justify-between p-3 sm:p-4 border-b">
+            <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-800 bg-gray-900">
                 <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                    <Bot className="h-5 w-5 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+                    <div className="p-1.5 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500">
+                        <Bot className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                    </div>
                     <div className="min-w-0">
-                        <h3 className="font-semibold text-sm sm:text-base truncate">
+                        <h3 className="font-semibold text-sm sm:text-base truncate text-gray-100">
                             {documentId
                                 ? `Chat with ${documentName || 'Document'}`
                                 : 'Chat with All Documents'}
                         </h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                        <p className="text-xs sm:text-sm text-gray-500 truncate">
                             {documentId
                                 ? 'Ask questions about this specific document'
                                 : 'Ask questions across all your uploaded documents'}
@@ -340,10 +342,10 @@ export default function ChatInterface({
                             variant="outline"
                             size="sm"
                             onClick={() => setShowSources(!showSources)}
-                            className="text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
+                            className="text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3 border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
                         >
                             {showSources ? 'Hide' : 'Show'}
-                            <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs">
+                            <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs bg-gray-700 text-gray-300 border-gray-600">
                                 {currentSources.length}
                             </Badge>
                         </Button>
@@ -353,7 +355,7 @@ export default function ChatInterface({
                         size="sm"
                         onClick={handleClearChat}
                         disabled={messages.length <= 1}
-                        className="text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
+                        className="text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3 text-gray-400 hover:text-white hover:bg-gray-800"
                     >
                         <span className="hidden sm:inline">Clear</span>
                         <span className="sm:hidden">×</span>
@@ -362,7 +364,7 @@ export default function ChatInterface({
             </div>
 
             {/* Main Chat Area - Responsive */}
-            <div className="flex flex-1 overflow-hidden relative">
+            <div className="flex flex-1 overflow-hidden relative bg-gray-900">
                 {/* Messages - Responsive width */}
                 <div className={`flex-1 ${showSources ? 'hidden sm:block sm:w-2/3 lg:w-3/4' : 'w-full'}`}>
                     <ScrollArea
@@ -381,12 +383,12 @@ export default function ChatInterface({
                         {/* Loading indicator - Responsive */}
                         {isLoading && (
                             <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4">
-                                <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                                    <Bot className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
+                                <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
+                                    <Bot className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-purple-400" />
                                 </div>
                                 <div className="flex items-center gap-1.5 sm:gap-2">
-                                    <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
-                                    <span className="text-muted-foreground text-sm sm:text-base">Thinking...</span>
+                                    <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin text-blue-400" />
+                                    <span className="text-gray-500 text-sm sm:text-base">Thinking...</span>
                                 </div>
                             </div>
                         )}
@@ -396,8 +398,8 @@ export default function ChatInterface({
 
                     {/* Error display - Responsive */}
                     {error && (
-                        <div className="p-3 sm:p-4 border-t">
-                            <div className="flex items-center gap-2 text-destructive text-xs sm:text-sm">
+                        <div className="p-3 sm:p-4 border-t border-gray-800 bg-gray-900">
+                            <div className="flex items-center gap-2 text-red-400 text-xs sm:text-sm">
                                 <AlertCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
                                 <span className="truncate">{error}</span>
                             </div>
@@ -409,15 +411,15 @@ export default function ChatInterface({
                 {showSources && currentSources.length > 0 && (
                     <>
                         {/* Mobile overlay */}
-                        <div className={`sm:hidden fixed inset-0 bg-background/80 backdrop-blur-sm z-50 ${showSources ? 'block' : 'hidden'}`}>
-                            <div className="absolute right-0 top-0 h-full w-11/12 max-w-md bg-background border-l shadow-lg">
-                                <div className="flex items-center justify-between p-4 border-b">
-                                    <h4 className="font-semibold">Sources ({currentSources.length})</h4>
+                        <div className={`sm:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 ${showSources ? 'block' : 'hidden'}`}>
+                            <div className="absolute right-0 top-0 h-full w-11/12 max-w-md bg-gray-900 border-l border-gray-800 shadow-2xl">
+                                <div className="flex items-center justify-between p-4 border-b border-gray-800">
+                                    <h4 className="font-semibold text-gray-200">Sources ({currentSources.length})</h4>
                                     <Button
                                         variant="ghost"
                                         size="sm"
                                         onClick={() => setShowSources(false)}
-                                        className="h-8 w-8 p-0"
+                                        className="h-8 w-8 p-0 text-gray-400 hover:text-white hover:bg-gray-800"
                                     >
                                         <X className="h-4 w-4" />
                                     </Button>
@@ -433,15 +435,15 @@ export default function ChatInterface({
                         </div>
 
                         {/* Desktop side panel */}
-                        <div className="hidden sm:block sm:w-1/3 lg:w-1/4 border-l">
+                        <div className="hidden sm:block sm:w-1/3 lg:w-1/4 border-l border-gray-800 bg-gray-900">
                             <div className="h-full flex flex-col">
-                                <div className="p-3 sm:p-4 border-b flex items-center justify-between">
-                                    <h4 className="font-semibold text-sm sm:text-base">Sources</h4>
+                                <div className="p-3 sm:p-4 border-b border-gray-800 flex items-center justify-between">
+                                    <h4 className="font-semibold text-sm sm:text-base text-gray-200">Sources</h4>
                                     <Button
                                         variant="ghost"
                                         size="sm"
                                         onClick={() => setShowSources(false)}
-                                        className="h-7 w-7 sm:h-8 sm:w-8 p-0"
+                                        className="h-7 w-7 sm:h-8 sm:w-8 p-0 text-gray-400 hover:text-white hover:bg-gray-800"
                                     >
                                         <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                     </Button>
@@ -460,7 +462,7 @@ export default function ChatInterface({
             </div>
 
             {/* Input Area - Responsive */}
-            <div className="border-t p-3 sm:p-4">
+            <div className="border-t border-gray-800 p-3 sm:p-4 bg-gray-900">
                 <ChatInput
                     onSendMessage={handleSendMessage}
                     disabled={isLoading}
@@ -473,11 +475,11 @@ export default function ChatInterface({
 
                 {/* Stats - Responsive */}
                 {messages.length > 1 && (
-                    <div className="flex flex-col xs:flex-row xs:items-center justify-between mt-2 sm:mt-3 text-xs text-muted-foreground gap-1.5 sm:gap-2">
+                    <div className="flex flex-col xs:flex-row xs:items-center justify-between mt-2 sm:mt-3 text-xs text-gray-600 gap-1.5 sm:gap-2">
                         <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
-                            <span>{messages.filter(m => m.role === 'user').length} questions</span>
+                            <span className="text-gray-500">{messages.filter(m => m.role === 'user').length} questions</span>
                             {messages.some(m => m.sources) && (
-                                <span>
+                                <span className="text-gray-500">
                                     {messages.reduce((acc, m) => acc + (m.sources?.length || 0), 0)} sources used
                                 </span>
                             )}
@@ -487,7 +489,7 @@ export default function ChatInterface({
                             size="sm"
                             onClick={handleRegenerate}
                             disabled={isLoading || messages.filter(m => m.role === 'user').length === 0}
-                            className="h-7 text-xs w-full xs:w-auto mt-1 xs:mt-0"
+                            className="h-7 text-xs w-full xs:w-auto mt-1 xs:mt-0 text-gray-400 hover:text-white hover:bg-gray-800"
                         >
                             <Loader2 className="h-3 w-3 mr-1" />
                             Regenerate

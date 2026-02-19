@@ -37,10 +37,8 @@ const PROCESSING_STEPS = [
     name: 'Uploading to Storage',
     icon: Upload,
     gradient: 'from-blue-500 to-cyan-500',
-    bgLight: 'bg-blue-50',
-    bgDark: 'dark:bg-blue-950/30',
-    textLight: 'text-blue-600',
-    textDark: 'dark:text-blue-400',
+    bgLight: 'bg-blue-500/10',
+    textLight: 'text-blue-400',
     weight: 10
   },
   {
@@ -48,10 +46,8 @@ const PROCESSING_STEPS = [
     name: 'Creating Document Record',
     icon: FileText,
     gradient: 'from-green-500 to-emerald-500',
-    bgLight: 'bg-green-50',
-    bgDark: 'dark:bg-green-950/30',
-    textLight: 'text-green-600',
-    textDark: 'dark:text-green-400',
+    bgLight: 'bg-green-500/10',
+    textLight: 'text-green-400',
     weight: 10
   },
   {
@@ -59,10 +55,8 @@ const PROCESSING_STEPS = [
     name: 'Extracting Text Content',
     icon: FileText,
     gradient: 'from-purple-500 to-pink-500',
-    bgLight: 'bg-purple-50',
-    bgDark: 'dark:bg-purple-950/30',
-    textLight: 'text-purple-600',
-    textDark: 'dark:text-purple-400',
+    bgLight: 'bg-purple-500/10',
+    textLight: 'text-purple-400',
     weight: 15
   },
   {
@@ -70,10 +64,8 @@ const PROCESSING_STEPS = [
     name: 'Creating Knowledge Chunks',
     icon: BrainCircuit,
     gradient: 'from-amber-500 to-orange-500',
-    bgLight: 'bg-amber-50',
-    bgDark: 'dark:bg-amber-950/30',
-    textLight: 'text-amber-600',
-    textDark: 'dark:text-amber-400',
+    bgLight: 'bg-amber-500/10',
+    textLight: 'text-amber-400',
     weight: 15
   },
   {
@@ -81,10 +73,8 @@ const PROCESSING_STEPS = [
     name: 'Generating AI Embeddings',
     icon: Sparkles,
     gradient: 'from-pink-500 to-rose-500',
-    bgLight: 'bg-pink-50',
-    bgDark: 'dark:bg-pink-950/30',
-    textLight: 'text-pink-600',
-    textDark: 'dark:text-pink-400',
+    bgLight: 'bg-pink-500/10',
+    textLight: 'text-pink-400',
     weight: 25
   },
   {
@@ -92,10 +82,8 @@ const PROCESSING_STEPS = [
     name: 'Building Knowledge Graph',
     icon: Network,
     gradient: 'from-indigo-500 to-purple-500',
-    bgLight: 'bg-indigo-50',
-    bgDark: 'dark:bg-indigo-950/30',
-    textLight: 'text-indigo-600',
-    textDark: 'dark:text-indigo-400',
+    bgLight: 'bg-indigo-500/10',
+    textLight: 'text-indigo-400',
     weight: 15
   },
   {
@@ -103,10 +91,8 @@ const PROCESSING_STEPS = [
     name: 'Finalizing Document',
     icon: Rocket,
     gradient: 'from-emerald-500 to-teal-500',
-    bgLight: 'bg-emerald-50',
-    bgDark: 'dark:bg-emerald-950/30',
-    textLight: 'text-emerald-600',
-    textDark: 'dark:text-emerald-400',
+    bgLight: 'bg-emerald-500/10',
+    textLight: 'text-emerald-400',
     weight: 10
   },
 ];
@@ -181,44 +167,52 @@ export function ProcessingProgress({ documentId, filename, onComplete }: Process
     const status = getStepStatus(stepId);
     switch (status) {
       case 'completed':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-green-400" />;
       case 'current':
-        return <Loader2 className="h-5 w-5 animate-spin text-blue-500" />;
+        return <Loader2 className="h-5 w-5 animate-spin text-blue-400" />;
       default:
-        return <step.icon className="h-5 w-5 text-gray-400 dark:text-gray-600" />;
+        return <step.icon className="h-5 w-5 text-gray-600" />;
     }
   };
 
   // Show loading while getting user ID
   if (!userId) {
     return (
-      <div className="text-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
-        <p className="text-muted-foreground">Loading user information...</p>
+      <div className="min-h-screen bg-black">
+        <div className="text-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-400" />
+          <p className="text-gray-500">Loading user information...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 py-6 sm:py-8 md:py-12 px-4 sm:px-6">
-      <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
+    <div className="min-h-screen bg-black py-6 sm:py-8 md:py-12 px-4 sm:px-6 relative overflow-hidden">
+      {/* Background Decoration - Subtle for dark theme */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-amber-500/5 to-pink-500/5 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 relative z-10">
         {/* Header with Gradient */}
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 dark:from-blue-500/5 dark:to-purple-500/5 border border-blue-200/50 dark:border-blue-800/50 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-900 border border-gray-800 backdrop-blur-sm">
             {isConnected ? (
               <>
                 <div className="relative">
-                  <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-25"></div>
-                  <div className="relative h-2 w-2 rounded-full bg-green-500"></div>
+                  <div className="absolute inset-0 bg-green-400 rounded-full animate-ping opacity-25"></div>
+                  <div className="relative h-2 w-2 rounded-full bg-green-400"></div>
                 </div>
-                <span className="text-sm font-medium bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
+                <span className="text-sm font-medium text-green-400">
                   Live Processing
                 </span>
               </>
             ) : (
               <>
-                <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-                <span className="text-sm font-medium text-amber-600 dark:text-amber-400">
+                <div className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+                <span className="text-sm font-medium text-amber-400">
                   Connecting...
                 </span>
               </>
@@ -226,26 +220,26 @@ export function ProcessingProgress({ documentId, filename, onComplete }: Process
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-100">
               Processing Document
             </h1>
-            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-4">
-              Your document <span className="font-semibold text-blue-600 dark:text-blue-400">"{filename}"</span> is being transformed into an intelligent knowledge graph
+            <p className="text-sm sm:text-base text-gray-500 max-w-2xl mx-auto px-4">
+              Your document <span className="font-semibold text-blue-400">"{filename}"</span> is being transformed into an intelligent knowledge graph
             </p>
           </div>
 
           {/* Stats Badges */}
           <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
-            <Badge variant="outline" className="px-3 py-1.5 bg-white dark:bg-gray-900">
-              <Activity className="h-3.5 w-3.5 mr-1.5 text-blue-500" />
+            <Badge variant="outline" className="px-3 py-1.5 bg-gray-900 border-gray-800 text-gray-300">
+              <Activity className="h-3.5 w-3.5 mr-1.5 text-blue-400" />
               <span className="text-xs font-medium">Real-time</span>
             </Badge>
-            <Badge variant="outline" className="px-3 py-1.5 bg-white dark:bg-gray-900">
-              <Cpu className="h-3.5 w-3.5 mr-1.5 text-purple-500" />
+            <Badge variant="outline" className="px-3 py-1.5 bg-gray-900 border-gray-800 text-gray-300">
+              <Cpu className="h-3.5 w-3.5 mr-1.5 text-purple-400" />
               <span className="text-xs font-medium">AI Powered</span>
             </Badge>
-            <Badge variant="outline" className="px-3 py-1.5 bg-white dark:bg-gray-900">
-              <Gauge className="h-3.5 w-3.5 mr-1.5 text-green-500" />
+            <Badge variant="outline" className="px-3 py-1.5 bg-gray-900 border-gray-800 text-gray-300">
+              <Gauge className="h-3.5 w-3.5 mr-1.5 text-green-400" />
               <span className="text-xs font-medium">High Performance</span>
             </Badge>
           </div>
@@ -253,9 +247,9 @@ export function ProcessingProgress({ documentId, filename, onComplete }: Process
 
         {/* Error Display */}
         {error && (
-          <Alert variant="destructive" className="border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/30">
-            <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-            <AlertDescription className="text-red-700 dark:text-red-300">
+          <Alert variant="destructive" className="border-red-900 bg-red-950/50 text-red-400">
+            <AlertCircle className="h-4 w-4 text-red-400" />
+            <AlertDescription className="text-red-300">
               {error}
             </AlertDescription>
           </Alert>
@@ -263,28 +257,28 @@ export function ProcessingProgress({ documentId, filename, onComplete }: Process
 
         {/* Completion Message */}
         {completed && (
-          <Alert className="border-green-200 dark:border-green-900 bg-green-50 dark:bg-green-950/30">
-            <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
-            <AlertDescription className="text-green-700 dark:text-green-300">
+          <Alert className="border-green-900 bg-green-950/50">
+            <CheckCircle className="h-4 w-4 text-green-400" />
+            <AlertDescription className="text-green-300">
               Document processing completed! Redirecting to document page...
             </AlertDescription>
           </Alert>
         )}
 
         {/* Main Progress Card */}
-        <Card className="border-0 shadow-xl bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm overflow-hidden">
+        <Card className="border-0 bg-gray-900/90 backdrop-blur-sm overflow-hidden shadow-2xl shadow-purple-500/5">
           {/* Top Gradient Bar */}
           <div className="h-1.5 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
 
-          <CardHeader className="px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-200 dark:border-gray-800">
+          <CardHeader className="px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-800">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <CardTitle className="text-lg sm:text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+              <CardTitle className="text-lg sm:text-xl font-semibold text-gray-100">
                 Processing Pipeline
               </CardTitle>
               <div className="flex flex-wrap items-center gap-2">
                 {estimatedTime && (
-                  <Badge variant="outline" className="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-gray-800">
-                    <Clock className="h-3.5 w-3.5 text-blue-500" />
+                  <Badge variant="outline" className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 border-gray-700 text-gray-300">
+                    <Clock className="h-3.5 w-3.5 text-blue-400" />
                     <span className="text-xs font-medium">{estimatedTime} remaining</span>
                   </Badge>
                 )}
@@ -293,14 +287,14 @@ export function ProcessingProgress({ documentId, filename, onComplete }: Process
                   className={cn(
                     "px-3 py-1.5",
                     isConnected
-                      ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300"
-                      : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300"
+                      ? "bg-green-950/30 border-green-800 text-green-400"
+                      : "bg-amber-950/30 border-amber-800 text-amber-400"
                   )}
                 >
                   <div className="flex items-center gap-1.5">
                     <div className={cn(
                       "h-2 w-2 rounded-full",
-                      isConnected ? "bg-green-500 animate-pulse" : "bg-amber-500 animate-pulse"
+                      isConnected ? "bg-green-400 animate-pulse" : "bg-amber-400 animate-pulse"
                     )} />
                     <span className="text-xs font-medium">{isConnected ? 'Live' : 'Offline'}</span>
                   </div>
@@ -313,32 +307,32 @@ export function ProcessingProgress({ documentId, filename, onComplete }: Process
             {/* Overall Progress Bar */}
             <div className="space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Overall Progress</span>
+                <span className="text-sm font-medium text-gray-400">Overall Progress</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  <span className="text-2xl sm:text-3xl font-bold text-blue-400">
                     {currentProgress.toFixed(1)}%
                   </span>
-                  <Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0">
+                  <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0">
                     {PROCESSING_STEPS.find(s => s.id === currentStep)?.name || 'Processing'}
                   </Badge>
                 </div>
               </div>
               <div className="relative">
-                <Progress value={currentProgress} className="h-3 bg-gray-200 dark:bg-gray-800" />
+                <Progress value={currentProgress} className="h-3 bg-gray-800" />
                 <div
                   className="absolute top-0 left-0 h-3 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-500"
                   style={{ width: `${currentProgress}%` }}
                 />
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 text-center animate-pulse">
+              <p className="text-sm text-gray-500 text-center animate-pulse">
                 {currentMessage}
               </p>
             </div>
 
             {/* Step-by-Step Progress */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                <Zap className="h-4 w-4 text-amber-500" />
+              <h3 className="font-semibold text-gray-300 flex items-center gap-2">
+                <Zap className="h-4 w-4 text-amber-400" />
                 Processing Steps
               </h3>
               <div className="relative">
@@ -353,17 +347,17 @@ export function ProcessingProgress({ documentId, filename, onComplete }: Process
                         key={step.id}
                         className={cn(
                           "relative flex items-start gap-3 p-4 rounded-xl border transition-all duration-300",
-                          status === 'completed' && "border-green-200 dark:border-green-900 bg-green-50/50 dark:bg-green-950/20",
-                          status === 'current' && "border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/20 shadow-lg scale-[1.02]",
-                          status === 'pending' && "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
+                          status === 'completed' && "border-green-900 bg-green-950/20",
+                          status === 'current' && "border-blue-900 bg-blue-950/20 shadow-lg shadow-blue-500/10 scale-[1.02]",
+                          status === 'pending' && "border-gray-800 bg-gray-900"
                         )}
                       >
                         {/* Step Number Badge */}
                         <div className={cn(
                           "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold",
-                          status === 'completed' && "bg-green-500 text-white",
-                          status === 'current' && "bg-blue-500 text-white animate-pulse",
-                          status === 'pending' && "bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                          status === 'completed' && "bg-green-500/20 text-green-400",
+                          status === 'current' && "bg-blue-500/20 text-blue-400 animate-pulse",
+                          status === 'pending' && "bg-gray-800 text-gray-500"
                         )}>
                           {step.id}
                         </div>
@@ -372,13 +366,13 @@ export function ProcessingProgress({ documentId, filename, onComplete }: Process
                           <div className="flex items-center justify-between mb-1">
                             <h4 className={cn(
                               "text-sm font-medium truncate",
-                              status === 'completed' && "text-green-700 dark:text-green-400",
-                              status === 'current' && "text-blue-700 dark:text-blue-400",
-                              status === 'pending' && "text-gray-700 dark:text-gray-300"
+                              status === 'completed' && "text-green-400",
+                              status === 'current' && "text-blue-400",
+                              status === 'pending' && "text-gray-500"
                             )}>
                               {step.name}
                             </h4>
-                            <span className="text-xs text-gray-500 dark:text-gray-400 ml-2 shrink-0">
+                            <span className="text-xs text-gray-600 ml-2 shrink-0">
                               {step.weight}%
                             </span>
                           </div>
@@ -386,7 +380,7 @@ export function ProcessingProgress({ documentId, filename, onComplete }: Process
                           {/* Progress indicator for current step */}
                           {status === 'current' && (
                             <div className="mt-2">
-                              <div className="h-1 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
+                              <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
                                 <div
                                   className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500"
                                   style={{
@@ -401,13 +395,13 @@ export function ProcessingProgress({ documentId, filename, onComplete }: Process
                         {/* Status Icon */}
                         <div className="shrink-0">
                           {status === 'completed' && (
-                            <CheckCircle className="h-5 w-5 text-green-500" />
+                            <CheckCircle className="h-5 w-5 text-green-400" />
                           )}
                           {status === 'current' && (
-                            <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
+                            <Loader2 className="h-5 w-5 animate-spin text-blue-400" />
                           )}
                           {status === 'pending' && (
-                            <div className="h-5 w-5 rounded-full border-2 border-gray-300 dark:border-gray-700" />
+                            <div className="h-5 w-5 rounded-full border-2 border-gray-700" />
                           )}
                         </div>
                       </div>
@@ -418,20 +412,20 @@ export function ProcessingProgress({ documentId, filename, onComplete }: Process
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-200 dark:border-gray-800">
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                <BrainCircuit className="h-4 w-4 text-purple-500" />
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-800">
+              <p className="text-xs sm:text-sm text-gray-500 flex items-center gap-2">
+                <BrainCircuit className="h-4 w-4 text-purple-400" />
                 You can leave this page - processing will continue in the background
               </p>
               <Button
                 variant="outline"
                 onClick={reconnect}
                 disabled={isConnected}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 {isConnected ? (
                   <>
-                    <div className="h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse" />
+                    <div className="h-2 w-2 rounded-full bg-green-400 mr-2 animate-pulse" />
                     Connected
                   </>
                 ) : (
@@ -444,12 +438,6 @@ export function ProcessingProgress({ documentId, filename, onComplete }: Process
             </div>
           </CardContent>
         </Card>
-
-        {/* Background Decoration */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-amber-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        </div>
       </div>
     </div>
   );

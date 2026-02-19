@@ -155,7 +155,7 @@ export function NotificationBell() {
 
         fetchNotifications();
 
-        //  Setup real-time listener - CRITICAL FIX: Use userId in filter
+        //  Setup real-time listener - Use userId in filter
         console.log(` Setting up real-time for user: ${userId}`);
 
         const channel = supabase
@@ -285,7 +285,7 @@ export function NotificationBell() {
                     className="relative"
                     disabled={isLoading}
                 >
-                    <Bell className="h-5 w-5" />
+                    <Bell className="h-5 w-5 text-white" />
                     {unreadCount > 0 && (
                         <Badge
                             variant="destructive"

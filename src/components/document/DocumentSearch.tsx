@@ -159,15 +159,15 @@ export default function DocumentSearch({ documentId, documentName }: DocumentSea
     return (
         <div className="space-y-4 sm:space-y-6">
             {/* Search Header */}
-            <Card className="w-full">
+            <Card className="w-full bg-gray-900 border-gray-800 shadow-lg">
                 <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
                     <div className="space-y-3 sm:space-y-4">
                         <div>
-                            <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2 flex-wrap">
-                                <Search className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                            <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2 flex-wrap text-gray-100">
+                                <Search className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-blue-400" />
                                 <span className="truncate">Search Within This Document</span>
                             </h3>
-                            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                            <p className="text-xs sm:text-sm text-gray-500 mt-1">
                                 Find content using semantic search. Searches for meaning, not just exact words.
                             </p>
                         </div>
@@ -180,14 +180,14 @@ export default function DocumentSearch({ documentId, documentName }: DocumentSea
                                     onChange={(e) => setQuery(e.target.value)}
                                     onKeyDown={handleKeyPress}
                                     placeholder="Search for concepts, topics, or phrases..."
-                                    className="pl-9 sm:pl-10 h-10 sm:h-11 text-sm sm:text-base"
+                                    className="pl-9 sm:pl-10 h-10 sm:h-11 text-sm sm:text-base bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-500 focus:border-gray-600 focus:ring-1 focus:ring-gray-600"
                                 />
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-500" />
                             </div>
                             <Button
                                 onClick={handleSearch}
                                 disabled={isSearching}
-                                className="h-10 sm:h-11 text-sm sm:text-base"
+                                className="h-10 sm:h-11 text-sm sm:text-base bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white border-0 shadow-lg shadow-blue-600/20"
                             >
                                 {isSearching ? (
                                     <>
@@ -201,15 +201,15 @@ export default function DocumentSearch({ documentId, documentName }: DocumentSea
                         </div>
 
                         {/* Search Info */}
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs sm:text-sm text-muted-foreground gap-2 sm:gap-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs sm:text-sm text-gray-500 gap-2 sm:gap-4">
                             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                                 <div className="flex items-center gap-2">
-                                    <Filter className="h-3 w-3 flex-shrink-0" />
-                                    <span>Min match: </span>
+                                    <Filter className="h-3 w-3 flex-shrink-0 text-gray-500" />
+                                    <span className="text-gray-400">Min match: </span>
                                     <select
                                         value={minScore}
                                         onChange={(e) => setMinScore(parseFloat(e.target.value))}
-                                        className="bg-transparent border-none focus:outline-none text-xs sm:text-sm"
+                                        className="bg-gray-800 border border-gray-700 rounded-md px-2 py-1 text-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-600 text-xs sm:text-sm"
                                     >
                                         <option value="0.5">50%</option>
                                         <option value="0.6">60%</option>
@@ -219,14 +219,14 @@ export default function DocumentSearch({ documentId, documentName }: DocumentSea
                                     </select>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <BarChart3 className="h-3 w-3 flex-shrink-0" />
-                                    <span className="hidden xs:inline">Semantic search (finds related concepts)</span>
-                                    <span className="xs:hidden">Semantic search</span>
+                                    <BarChart3 className="h-3 w-3 flex-shrink-0 text-gray-500" />
+                                    <span className="hidden xs:inline text-gray-400">Semantic search (finds related concepts)</span>
+                                    <span className="xs:hidden text-gray-400">Semantic search</span>
                                 </div>
                             </div>
 
                             {searchResults && (
-                                <div className="font-medium text-xs sm:text-sm">
+                                <div className="font-medium text-xs sm:text-sm text-blue-400">
                                     {searchResults.metadata.total_chunks} results found
                                 </div>
                             )}
@@ -240,10 +240,10 @@ export default function DocumentSearch({ documentId, documentName }: DocumentSea
                 <div className="space-y-3 sm:space-y-4">
                     {/* Results Header */}
                     <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2">
-                        <h4 className="font-semibold text-sm sm:text-base truncate">
+                        <h4 className="font-semibold text-sm sm:text-base truncate text-gray-200">
                             Results for "{searchResults.query}"
                         </h4>
-                        <Badge variant="outline" className="text-xs sm:text-sm">
+                        <Badge variant="outline" className="text-xs sm:text-sm bg-gray-800 border-gray-700 text-gray-300">
                             {searchResults.results.length} document{searchResults.results.length !== 1 ? 's' : ''}
                         </Badge>
                     </div>
@@ -253,16 +253,16 @@ export default function DocumentSearch({ documentId, documentName }: DocumentSea
                         <ScrollArea className="h-full pr-2 sm:pr-4">
                             <div className="space-y-3 sm:space-y-4">
                                 {searchResults.results.map((docResult, docIndex) => (
-                                    <Card key={docResult.document_id} className="overflow-hidden">
+                                    <Card key={docResult.document_id} className="overflow-hidden bg-gray-900 border-gray-800 hover:border-gray-700 transition-colors">
                                         <CardHeader className="pb-2 sm:pb-3 px-3 sm:px-6">
                                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                                                 <div className="flex items-center gap-2 min-w-0">
-                                                    <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
-                                                    <CardTitle className="text-sm sm:text-base truncate" title={docResult.filename}>
+                                                    <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+                                                    <CardTitle className="text-sm sm:text-base truncate text-gray-200" title={docResult.filename}>
                                                         {docResult.filename}
                                                     </CardTitle>
                                                 </div>
-                                                <Badge variant="secondary" className="text-xs sm:text-sm w-fit sm:w-auto">
+                                                <Badge variant="secondary" className="text-xs sm:text-sm w-fit sm:w-auto bg-gray-800 text-gray-300 border border-gray-700">
                                                     {docResult.chunks.length} match{docResult.chunks.length !== 1 ? 'es' : ''}
                                                 </Badge>
                                             </div>
@@ -272,28 +272,28 @@ export default function DocumentSearch({ documentId, documentName }: DocumentSea
                                                 {docResult.chunks.map((chunk, chunkIndex) => (
                                                     <div
                                                         key={`${chunk.vector_id}-${chunkIndex}`}
-                                                        className="p-2 sm:p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                                                        className="p-2 sm:p-3 border border-gray-800 rounded-lg hover:bg-gray-800/50 transition-colors"
                                                     >
                                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-1 sm:mb-2 gap-1 sm:gap-0">
                                                             <div className="flex items-center gap-2 flex-wrap">
                                                                 <Badge
                                                                     variant="outline"
-                                                                    className="font-mono text-xs"
+                                                                    className="font-mono text-xs border-0"
                                                                     style={{
-                                                                        backgroundColor: `rgba(34, 197, 94, ${chunk.similarity})`,
-                                                                        borderColor: '#22c55e'
+                                                                        backgroundColor: `rgba(34, 197, 94, ${chunk.similarity * 0.3})`,
+                                                                        color: chunk.similarity > 0.7 ? '#4ade80' : '#86efac'
                                                                     }}
                                                                 >
                                                                     {(chunk.similarity * 100).toFixed(0)}% match
                                                                 </Badge>
-                                                                <span className="text-xs text-muted-foreground">
+                                                                <span className="text-xs text-gray-500">
                                                                     Chunk {chunk.chunk_index + 1}
                                                                 </span>
                                                             </div>
                                                             <Button
                                                                 variant="ghost"
                                                                 size="sm"
-                                                                className="h-6 w-6 sm:w-auto p-0 sm:p-2 self-end"
+                                                                className="h-6 w-6 sm:w-auto p-0 sm:p-2 self-end text-gray-400 hover:text-white hover:bg-gray-800"
                                                                 onClick={() => {
                                                                     toast.info('View chunk', {
                                                                         description: `Chunk ${chunk.chunk_index + 1}`,
@@ -304,7 +304,7 @@ export default function DocumentSearch({ documentId, documentName }: DocumentSea
                                                                 <span className="hidden sm:inline ml-1 text-xs">View</span>
                                                             </Button>
                                                         </div>
-                                                        <p className="text-xs sm:text-sm leading-relaxed line-clamp-3 sm:line-clamp-4">
+                                                        <p className="text-xs sm:text-sm leading-relaxed line-clamp-3 sm:line-clamp-4 text-gray-400">
                                                             {cleanPdfText(chunk.content)}
                                                         </p>
                                                     </div>
@@ -319,12 +319,12 @@ export default function DocumentSearch({ documentId, documentName }: DocumentSea
                 </div>
             ) : (
                 /* Empty State */
-                <Card className="w-full">
+                <Card className="w-full bg-gray-900 border-gray-800">
                     <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
                         <div className="text-center py-6 sm:py-8 md:py-12">
-                            <Search className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-muted-foreground mx-auto mb-3 sm:mb-4" />
-                            <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2">Search This Document</h3>
-                            <p className="text-xs sm:text-sm md:text-base text-muted-foreground mb-4 sm:mb-6 max-w-md mx-auto">
+                            <Search className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-gray-700 mx-auto mb-3 sm:mb-4" />
+                            <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-gray-200">Search This Document</h3>
+                            <p className="text-xs sm:text-sm md:text-base text-gray-500 mb-4 sm:mb-6 max-w-md mx-auto">
                                 Enter a search term to find related content within "{documentName}".
                                 This uses semantic search to find concepts, not just exact words.
                             </p>
@@ -333,7 +333,7 @@ export default function DocumentSearch({ documentId, documentName }: DocumentSea
                                     variant="outline"
                                     size="sm"
                                     onClick={() => setQuery('technical skills')}
-                                    className="text-xs"
+                                    className="text-xs border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
                                 >
                                     technical skills
                                 </Button>
@@ -341,7 +341,7 @@ export default function DocumentSearch({ documentId, documentName }: DocumentSea
                                     variant="outline"
                                     size="sm"
                                     onClick={() => setQuery('projects')}
-                                    className="text-xs"
+                                    className="text-xs border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
                                 >
                                     projects
                                 </Button>
@@ -349,7 +349,7 @@ export default function DocumentSearch({ documentId, documentName }: DocumentSea
                                     variant="outline"
                                     size="sm"
                                     onClick={() => setQuery('experience')}
-                                    className="text-xs"
+                                    className="text-xs border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
                                 >
                                     experience
                                 </Button>
@@ -357,7 +357,7 @@ export default function DocumentSearch({ documentId, documentName }: DocumentSea
                                     variant="outline"
                                     size="sm"
                                     onClick={() => setQuery('education')}
-                                    className="text-xs"
+                                    className="text-xs border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
                                 >
                                     education
                                 </Button>

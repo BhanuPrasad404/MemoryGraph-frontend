@@ -74,23 +74,20 @@ export function Sidebar() {
 
     return (
         <aside className={cn(
-            'flex h-screen flex-col border-r bg-white dark:bg-gray-950 transition-all duration-300',
+            'flex h-screen flex-col border-r border-gray-800 bg-black transition-all duration-300',
             collapsed ? 'w-20' : 'w-72'
         )}>
             {/* Header */}
             <div className={cn(
-                'flex items-center h-16 border-b px-4',
-                collapsed ? 'justify-center' : 'justify-between'
+                'flex items-center h-16 border-b border-gray-800',
+                collapsed ? 'justify-center px-2' : 'justify-between px-4'
             )}>
                 {!collapsed && (
-                    <Link href="/dashboard" className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                            <div className="relative flex items-center justify-center">
-                                <Brain className="h-4 w-4 text-white absolute -top-2 -left-2" />
-
-                            </div>
+                    <Link href="/dashboard" className="flex items-center gap-2 group">
+                        <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                            <Brain className="h-4 w-4 text-white" />
                         </div>
-                        <span className="font-semibold text-gray-900 dark:text-gray-100">MemoryGraph</span>
+                        <span className="font-semibold text-gray-100 group-hover:text-white transition-colors">MemoryGraph</span>
                     </Link>
                 )}
 
@@ -98,20 +95,19 @@ export function Sidebar() {
                     variant="ghost"
                     size="icon"
                     onClick={() => setCollapsed(!collapsed)}
-                    className="h-8 w-8"
+                    className="h-8 w-8 text-gray-400 hover:text-white hover:bg-gray-800"
                 >
                     {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
                 </Button>
             </div>
 
-
             {/* Quick Upload */}
-            <div className={cn('p-4', collapsed ? 'px-2 flex justify-center' : 'px-4')}>
+            <div className={cn('py-4', collapsed ? 'px-2' : 'px-4')}>
                 <Link href="/upload">
                     <Button
                         className={cn(
-                            'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-sm hover:shadow transition-all',
-                            collapsed ? 'h-10 w-10 p-0 rounded-lg' : 'w-full h-10 justify-start gap-2 px-3 rounded-lg'
+                            'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-purple-600/30 transition-all duration-200',
+                            collapsed ? 'h-10 w-10 p-0 rounded-lg mx-auto' : 'w-full h-10 justify-start gap-2 px-3 rounded-lg'
                         )}
                     >
                         <PlusCircle className={cn('h-4 w-4', collapsed && 'm-0')} />
@@ -121,32 +117,34 @@ export function Sidebar() {
             </div>
 
             {/* Navigation - Takes ALL remaining space */}
-            <nav className="flex-1 overflow-y-auto px-3">
+            <nav className="flex-1 overflow-y-auto px-3 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
                 <div className={cn(
                     'flex flex-col',
-                    collapsed ? 'items-center' : 'space-y-1'
+                    collapsed ? 'items-center space-y-2' : 'space-y-1'
                 )}>
                     {navItems.map((item) => {
                         const isActive = pathname === item.href;
                         return (
-                            <Link key={item.href} href={item.href} className={collapsed ? 'block' : 'block'}>
+                            <Link key={item.href} href={item.href} className="w-full">
                                 <Button
-                                    variant={isActive ? 'secondary' : 'ghost'}
+                                    variant="ghost"
                                     className={cn(
                                         collapsed
                                             ? 'h-10 w-10 p-0 rounded-lg'
                                             : 'w-full h-10 justify-start gap-3 px-3 rounded-lg',
-                                        isActive && 'bg-gray-100 dark:bg-gray-800'
+                                        isActive
+                                            ? 'bg-gray-800 text-white hover:bg-gray-700'
+                                            : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
                                     )}
                                 >
                                     <item.icon className={cn(
                                         'h-4 w-4 shrink-0',
-                                        isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'
+                                        isActive ? 'text-blue-400' : 'text-gray-400'
                                     )} />
                                     {!collapsed && (
                                         <span className={cn(
                                             'text-sm',
-                                            isActive ? 'font-medium' : 'text-gray-700 dark:text-gray-300'
+                                            isActive ? 'font-medium text-white' : 'text-gray-300'
                                         )}>
                                             {item.label}
                                         </span>
@@ -160,38 +158,38 @@ export function Sidebar() {
 
             {/* Bottom Section - Fixed at bottom */}
             <div className={cn(
-                'border-t p-3',
-                collapsed ? 'flex flex-col items-center space-y-1' : 'space-y-1'
+                'border-t border-gray-800 p-3',
+                collapsed ? 'flex flex-col items-center space-y-2' : 'space-y-1'
             )}>
                 {/* Settings */}
-                <Link href="/settings" className={collapsed ? 'block' : 'block'}>
+                <Link href="/settings" className="w-full">
                     <Button
                         variant="ghost"
                         className={cn(
                             collapsed
                                 ? 'h-10 w-10 p-0 rounded-lg'
                                 : 'w-full h-10 justify-start gap-3 px-3 rounded-lg',
-                            'hover:bg-gray-100 dark:hover:bg-gray-800'
+                            'text-gray-400 hover:text-white hover:bg-gray-800/50'
                         )}
                     >
-                        <Settings className="h-4 w-4 shrink-0 text-gray-600 dark:text-gray-400" />
-                        {!collapsed && <span className="text-sm text-gray-700 dark:text-gray-300">Settings</span>}
+                        <Settings className="h-4 w-4 shrink-0" />
+                        {!collapsed && <span className="text-sm text-gray-300">Settings</span>}
                     </Button>
                 </Link>
 
                 {/* Help Center */}
-                <Link href="/help" className={collapsed ? 'block' : 'block'}>
+                <Link href="/help" className="w-full">
                     <Button
                         variant="ghost"
                         className={cn(
                             collapsed
                                 ? 'h-10 w-10 p-0 rounded-lg'
                                 : 'w-full h-10 justify-start gap-3 px-3 rounded-lg',
-                            'hover:bg-gray-100 dark:hover:bg-gray-800'
+                            'text-gray-400 hover:text-white hover:bg-gray-800/50'
                         )}
                     >
-                        <HelpCircle className="h-4 w-4 shrink-0 text-gray-600 dark:text-gray-400" />
-                        {!collapsed && <span className="text-sm text-gray-700 dark:text-gray-300">Help Center</span>}
+                        <HelpCircle className="h-4 w-4 shrink-0" />
+                        {!collapsed && <span className="text-sm text-gray-300">Help Center</span>}
                     </Button>
                 </Link>
 
@@ -202,7 +200,7 @@ export function Sidebar() {
                         collapsed
                             ? 'h-10 w-10 p-0 rounded-lg'
                             : 'w-full h-10 justify-start gap-3 px-3 rounded-lg',
-                        'text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/50'
+                        'text-red-400 hover:text-red-300 hover:bg-red-950/50'
                     )}
                     onClick={handleLogout}
                 >
@@ -213,8 +211,8 @@ export function Sidebar() {
 
             {/* Version */}
             {!collapsed && (
-                <div className="px-4 py-2 border-t">
-                    <p className="text-xs text-gray-400 dark:text-gray-600">Version 2.0.1</p>
+                <div className="px-4 py-2 border-t border-gray-800">
+                    <p className="text-xs text-gray-600">Version 2.0.1</p>
                 </div>
             )}
         </aside>

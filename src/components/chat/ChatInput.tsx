@@ -202,10 +202,10 @@ export default function ChatInput({
         <div className="w-full">
             {/* Speech error alert */}
             {speechError && (
-                <div className="mb-2 p-2 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-md">
+                <div className="mb-2 p-2 bg-red-950/30 border border-red-800 rounded-md">
                     <div className="flex items-start gap-2">
-                        <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
-                        <p className="text-xs text-red-700 dark:text-red-300">{speechError}</p>
+                        <AlertCircle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
+                        <p className="text-xs text-red-300">{speechError}</p>
                     </div>
                 </div>
             )}
@@ -223,7 +223,7 @@ export default function ChatInput({
                     onCompositionEnd={() => setIsComposing(false)}
                     placeholder={placeholder}
                     disabled={disabled || isRecording}
-                    className="min-h-[48px] sm:min-h-[56px] md:min-h-[60px] max-h-[120px] pr-20 sm:pr-24 resize-none text-sm sm:text-base"
+                    className="min-h-[48px] sm:min-h-[56px] md:min-h-[60px] max-h-[120px] pr-20 sm:pr-24 resize-none text-sm sm:text-base bg-gray-900 border-gray-800 text-gray-400 placeholder:text-gray-600 focus:border-gray-700 focus:ring-1 focus:ring-gray-700"
                     rows={1}
                 />
 
@@ -232,9 +232,12 @@ export default function ChatInput({
                     {/* Voice button */}
                     <Button
                         type="button"
-                        variant={isRecording ? "destructive" : "ghost"}
+                        variant="ghost"
                         size="icon"
-                        className={`h-7 w-7 sm:h-8 sm:w-8 ${isRecording ? 'animate-pulse' : ''}`}
+                        className={`h-7 w-7 sm:h-8 sm:w-8 ${isRecording
+                                ? 'bg-red-950/50 text-red-400 hover:bg-red-900 hover:text-red-300'
+                                : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                            } ${isRecording ? 'animate-pulse' : ''}`}
                         onClick={handleVoice}
                         disabled={disabled || !isSpeechSupported}
                     >
@@ -252,7 +255,7 @@ export default function ChatInput({
                     <Button
                         type="button"
                         size="icon"
-                        className="h-7 w-7 sm:h-8 sm:w-8"
+                        className="h-7 w-7 sm:h-8 sm:w-8 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white border-0 shadow-lg shadow-purple-600/20"
                         onClick={handleSend}
                         disabled={disabled || !input.trim() || isRecording}
                     >
@@ -264,18 +267,18 @@ export default function ChatInput({
                     </Button>
 
                     {/* Desktop: Attach button */}
-                    
+
                 </div>
 
                 {/* Recording indicator */}
                 {isRecording && (
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
                         <div className="flex space-x-1">
-                            <div className="h-2 w-1 bg-red-500 rounded-full animate-pulse"></div>
-                            <div className="h-2 w-1 bg-red-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                            <div className="h-2 w-1 bg-red-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                            <div className="h-2 w-1 bg-red-400 rounded-full animate-pulse"></div>
+                            <div className="h-2 w-1 bg-red-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                            <div className="h-2 w-1 bg-red-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
                         </div>
-                        <span className="text-xs text-red-600 font-medium">Listening...</span>
+                        <span className="text-xs text-red-400 font-medium">Listening...</span>
                     </div>
                 )}
             </div>
@@ -286,7 +289,7 @@ export default function ChatInput({
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="h-7 text-xs justify-start px-2 w-full xs:w-auto"
+                    className="h-7 text-xs justify-start px-2 w-full xs:w-auto text-gray-400 hover:text-white hover:bg-gray-800"
                     onClick={() => {
                         const suggestions = [
                             "Summarize this document",
@@ -299,35 +302,33 @@ export default function ChatInput({
                     }}
                     disabled={isRecording}
                 >
-                    <Smile className="h-3 w-3 mr-1.5 flex-shrink-0" />
+                    <Smile className="h-3 w-3 mr-1.5 flex-shrink-0 text-gray-500" />
                     <span className="truncate">Suggest a question</span>
                 </Button>
 
                 {/* Keyboard hint */}
-                <div className="flex items-center justify-between xs:justify-end gap-2 text-xs text-muted-foreground w-full xs:w-auto">
+                <div className="flex items-center justify-between xs:justify-end gap-2 text-xs text-gray-600 w-full xs:w-auto">
                     <div className="hidden sm:inline-flex items-center gap-1">
-                        <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs flex items-center gap-0.5">
+                        <kbd className="px-1.5 py-0.5 bg-gray-800 rounded text-xs flex items-center gap-0.5 text-gray-400 border border-gray-700">
                             <CornerDownLeft className="h-2.5 w-2.5" />
                             Enter
                         </kbd>
-                        <span>to send</span>
-                        <span className="mx-1">•</span>
-                        <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs">Shift</kbd>
-                        <span>+</span>
-                        <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs">Enter</kbd>
-                        <span>for new line</span>
+                        <span className="text-gray-500">to send</span>
+                        <span className="mx-1 text-gray-600">•</span>
+                        <kbd className="px-1.5 py-0.5 bg-gray-800 rounded text-xs text-gray-400 border border-gray-700">Shift</kbd>
+                        <span className="text-gray-500">+</span>
+                        <kbd className="px-1.5 py-0.5 bg-gray-800 rounded text-xs text-gray-400 border border-gray-700">Enter</kbd>
+                        <span className="text-gray-500">for new line</span>
                     </div>
                     <div className="sm:hidden flex items-center gap-1">
-                        <span>Press</span>
-                        <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs flex items-center gap-0.5">
+                        <span className="text-gray-500">Press</span>
+                        <kbd className="px-1.5 py-0.5 bg-gray-800 rounded text-xs flex items-center gap-0.5 text-gray-400 border border-gray-700">
                             <CornerDownLeft className="h-2.5 w-2.5" />
                             Send
                         </kbd>
                     </div>
                 </div>
             </div>
-
-           
         </div>
     );
 }

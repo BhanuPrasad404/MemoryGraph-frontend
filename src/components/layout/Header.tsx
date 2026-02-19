@@ -45,13 +45,13 @@ export function Header({ onMenuClick, sidebarOpen }: HeaderProps) {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background">
+        <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-black">
             <div className="flex h-16 items-center px-4">
                 {/* Mobile Menu */}
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="lg:hidden mr-2"
+                    className="lg:hidden mr-2 text-gray-400 hover:text-white hover:bg-gray-800"
                     onClick={onMenuClick}
                 >
                     {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -60,11 +60,11 @@ export function Header({ onMenuClick, sidebarOpen }: HeaderProps) {
                 {/* Search */}
                 <div className="flex-1">
                     <form onSubmit={handleSearch} className="relative max-w-2xl">
-                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
                         <Input
                             type="search"
                             placeholder="Search documents..."
-                            className="pl-10"
+                            className="pl-10 bg-gray-900 border-gray-700 text-gray-100 placeholder:text-gray-500 focus:border-gray-600 focus:ring-1 focus:ring-gray-600"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -72,10 +72,14 @@ export function Header({ onMenuClick, sidebarOpen }: HeaderProps) {
                 </div>
 
                 {/* Notifications & User */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                     <ClientOnly>
                         <NotificationBell />
                     </ClientOnly>
+                    
+                    {/* Vertical Divider */}
+                    <div className="h-8 w-px bg-gray-800 mx-1" />
+                    
                     <UserProfile />
                 </div>
             </div>

@@ -42,20 +42,20 @@ const ACCEPTED_FILE_TYPES = {
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
 const fileTypeIcons = {
-    pdf: { icon: '📕', color: 'from-red-500 to-rose-500', bg: 'bg-red-50 dark:bg-red-950/30' },
-    txt: { icon: '📝', color: 'from-blue-500 to-cyan-500', bg: 'bg-blue-50 dark:bg-blue-950/30' },
-    md: { icon: '📘', color: 'from-purple-500 to-pink-500', bg: 'bg-purple-50 dark:bg-purple-950/30' },
-    json: { icon: '📊', color: 'from-green-500 to-emerald-500', bg: 'bg-green-50 dark:bg-green-950/30' },
-    docx: { icon: '📄', color: 'from-amber-500 to-orange-500', bg: 'bg-amber-50 dark:bg-amber-950/30' },
-    doc: { icon: '📄', color: 'from-amber-500 to-orange-500', bg: 'bg-amber-50 dark:bg-amber-950/30' },
-    default: { icon: '📁', color: 'from-gray-500 to-gray-600', bg: 'bg-gray-50 dark:bg-gray-900' }
+    pdf: { icon: '📕', color: 'from-red-500 to-rose-500', bg: 'bg-red-500/10' },
+    txt: { icon: '📝', color: 'from-blue-500 to-cyan-500', bg: 'bg-blue-500/10' },
+    md: { icon: '📘', color: 'from-purple-500 to-pink-500', bg: 'bg-purple-500/10' },
+    json: { icon: '📊', color: 'from-green-500 to-emerald-500', bg: 'bg-green-500/10' },
+    docx: { icon: '📄', color: 'from-amber-500 to-orange-500', bg: 'bg-amber-500/10' },
+    doc: { icon: '📄', color: 'from-amber-500 to-orange-500', bg: 'bg-amber-500/10' },
+    default: { icon: '📁', color: 'from-gray-500 to-gray-600', bg: 'bg-gray-500/10' }
 };
 
 const features = [
-    { icon: Sparkles, label: 'AI Processing', desc: 'Intelligent extraction', color: 'text-purple-500' },
-    { icon: BrainCircuit, label: 'Knowledge Graph', desc: 'Build connections', color: 'text-blue-500' },
-    { icon: Shield, label: 'Secure', desc: 'Encrypted storage', color: 'text-green-500' },
-    { icon: Zap, label: 'Fast', desc: 'Real-time progress', color: 'text-amber-500' }
+    { icon: Sparkles, label: 'AI Processing', desc: 'Intelligent extraction', color: 'text-purple-400' },
+    { icon: BrainCircuit, label: 'Knowledge Graph', desc: 'Build connections', color: 'text-blue-400' },
+    { icon: Shield, label: 'Secure', desc: 'Encrypted storage', color: 'text-green-400' },
+    { icon: Zap, label: 'Fast', desc: 'Real-time progress', color: 'text-amber-400' }
 ];
 
 export function UploadZone({ onUploadComplete }: UploadZoneProps) {
@@ -146,27 +146,33 @@ export function UploadZone({ onUploadComplete }: UploadZoneProps) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 py-8 px-4">
-            <div className="max-w-3xl mx-auto space-y-8">
+        <div className="min-h-screen bg-black py-8 px-4 relative overflow-hidden">
+            {/* Background Decoration - Subtle for dark theme */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-full blur-3xl"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-amber-500/5 to-pink-500/5 rounded-full blur-3xl"></div>
+            </div>
+
+            <div className="max-w-3xl mx-auto space-y-8 relative z-10">
                 {/* Header Section */}
                 <div className="text-center space-y-4">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 dark:from-blue-500/5 dark:to-purple-500/5 border border-blue-200/50 dark:border-blue-800/50 backdrop-blur-sm">
-                        <Upload className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                        <span className="text-sm font-medium bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-900 border border-gray-800 backdrop-blur-sm">
+                        <Upload className="h-4 w-4 text-blue-400" />
+                        <span className="text-sm font-medium text-blue-400">
                             Document Upload
                         </span>
                     </div>
 
                     <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
-                        <span className="bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+                        <span className="text-gray-100">
                             Upload Your
                         </span>
-                        <span className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent ml-2">
+                        <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent ml-2">
                             Document
                         </span>
                     </h1>
 
-                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    <p className="text-sm sm:text-base text-gray-500 max-w-2xl mx-auto">
                         Upload documents to build your intelligent knowledge graph.
                         Our AI will extract insights and create connections automatically.
                     </p>
@@ -177,10 +183,10 @@ export function UploadZone({ onUploadComplete }: UploadZoneProps) {
                             <Badge
                                 key={idx}
                                 variant="outline"
-                                className="px-3 py-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800"
+                                className="px-3 py-2 bg-gray-900 border-gray-800 text-gray-300"
                             >
                                 <feature.icon className={`h-3.5 w-3.5 mr-1.5 ${feature.color}`} />
-                                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                                <span className="text-xs font-medium">
                                     {feature.label}
                                 </span>
                             </Badge>
@@ -189,7 +195,7 @@ export function UploadZone({ onUploadComplete }: UploadZoneProps) {
                 </div>
 
                 {/* Main Upload Card */}
-                <Card className="border-0 shadow-xl bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm overflow-hidden">
+                <Card className="border-0 bg-gray-900/90 backdrop-blur-sm overflow-hidden shadow-2xl shadow-purple-500/5">
                     {/* Top Gradient Bar */}
                     <div className="h-1.5 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
 
@@ -200,8 +206,8 @@ export function UploadZone({ onUploadComplete }: UploadZoneProps) {
                             className={cn(
                                 "relative group border-2 border-dashed rounded-2xl p-8 sm:p-12 text-center cursor-pointer transition-all duration-300",
                                 isDragActive
-                                    ? "border-blue-400 bg-blue-50/50 dark:bg-blue-950/30 scale-[1.02]"
-                                    : "border-gray-300 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-600 hover:bg-gray-50 dark:hover:bg-gray-900/50",
+                                    ? "border-blue-500 bg-blue-950/30 scale-[1.02]"
+                                    : "border-gray-800 hover:border-blue-500 hover:bg-gray-800/50",
                                 uploading && "opacity-50 cursor-not-allowed pointer-events-none"
                             )}
                         >
@@ -219,34 +225,34 @@ export function UploadZone({ onUploadComplete }: UploadZoneProps) {
                                 )}>
                                     <Upload className={cn(
                                         "h-8 w-8 sm:h-10 sm:w-10 transition-all duration-300",
-                                        isDragActive ? "text-white" : "text-blue-600 dark:text-blue-400 group-hover:scale-110"
+                                        isDragActive ? "text-white" : "text-blue-400 group-hover:scale-110"
                                     )} />
                                 </div>
 
                                 <div>
-                                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100">
+                                    <h3 className="text-lg sm:text-xl font-semibold text-gray-100">
                                         {isDragActive ? (
-                                            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                                                 Drop your file here
                                             </span>
                                         ) : (
                                             'Drag & drop your document'
                                         )}
                                     </h3>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                        or <span className="text-blue-600 dark:text-blue-400 font-medium cursor-pointer hover:underline">browse files</span>
+                                    <p className="text-sm text-gray-500 mt-1">
+                                        or <span className="text-blue-400 font-medium cursor-pointer hover:underline">browse files</span>
                                     </p>
                                 </div>
 
-                                <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-gray-500 dark:text-gray-400">
-                                    <Badge variant="outline" className="px-2 py-1">PDF</Badge>
-                                    <Badge variant="outline" className="px-2 py-1">TXT</Badge>
-                                    <Badge variant="outline" className="px-2 py-1">MD</Badge>
-                                    <Badge variant="outline" className="px-2 py-1">JSON</Badge>
-                                    <Badge variant="outline" className="px-2 py-1">DOCX</Badge>
+                                <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-gray-500">
+                                    <Badge variant="outline" className="px-2 py-1 border-gray-700 bg-gray-800 text-gray-400">PDF</Badge>
+                                    <Badge variant="outline" className="px-2 py-1 border-gray-700 bg-gray-800 text-gray-400">TXT</Badge>
+                                    <Badge variant="outline" className="px-2 py-1 border-gray-700 bg-gray-800 text-gray-400">MD</Badge>
+                                    <Badge variant="outline" className="px-2 py-1 border-gray-700 bg-gray-800 text-gray-400">JSON</Badge>
+                                    <Badge variant="outline" className="px-2 py-1 border-gray-700 bg-gray-800 text-gray-400">DOCX</Badge>
                                 </div>
 
-                                <p className="text-xs text-gray-400 dark:text-gray-600">
+                                <p className="text-xs text-gray-600">
                                     Maximum file size: 50MB
                                 </p>
                             </div>
@@ -255,7 +261,7 @@ export function UploadZone({ onUploadComplete }: UploadZoneProps) {
                         {/* Selected File Preview */}
                         {selectedFile && (
                             <div className="animate-in slide-in-from-bottom-4 duration-300">
-                                <div className="relative bg-gradient-to-r from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                                <div className="relative bg-gray-800 rounded-xl border border-gray-700 p-4">
                                     {/* Decorative corner gradient */}
                                     <div className="absolute top-0 left-0 w-20 h-20 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-tl-xl"></div>
 
@@ -272,15 +278,15 @@ export function UploadZone({ onUploadComplete }: UploadZoneProps) {
 
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-2 mb-1">
-                                                    <p className="font-medium text-gray-900 dark:text-gray-100 truncate">
+                                                    <p className="font-medium text-gray-100 truncate">
                                                         {selectedFile.name}
                                                     </p>
-                                                    <Badge variant="secondary" className="text-xs">
+                                                    <Badge variant="secondary" className="text-xs bg-gray-700 text-gray-300 border-gray-600">
                                                         {selectedFile.name.split('.').pop()?.toUpperCase()}
                                                     </Badge>
                                                 </div>
 
-                                                <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+                                                <div className="flex items-center gap-3 text-xs text-gray-400">
                                                     <span className="flex items-center gap-1">
                                                         <File className="h-3 w-3" />
                                                         {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
@@ -299,7 +305,7 @@ export function UploadZone({ onUploadComplete }: UploadZoneProps) {
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={removeFile}
-                                                className="h-8 w-8 text-gray-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+                                                className="h-8 w-8 text-gray-400 hover:text-red-400 hover:bg-red-950/50"
                                             >
                                                 <X className="h-4 w-4" />
                                             </Button>
@@ -310,11 +316,11 @@ export function UploadZone({ onUploadComplete }: UploadZoneProps) {
                                     {uploading && (
                                         <div className="mt-4 space-y-2">
                                             <div className="flex justify-between text-sm">
-                                                <span className="text-gray-600 dark:text-gray-400">Uploading...</span>
-                                                <span className="font-medium text-blue-600 dark:text-blue-400">{uploadProgress}%</span>
+                                                <span className="text-gray-400">Uploading...</span>
+                                                <span className="font-medium text-blue-400">{uploadProgress}%</span>
                                             </div>
                                             <div className="relative">
-                                                <Progress value={uploadProgress} className="h-2 bg-gray-200 dark:bg-gray-800" />
+                                                <Progress value={uploadProgress} className="h-2 bg-gray-700" />
                                                 <div
                                                     className="absolute top-0 left-0 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"
                                                     style={{ width: `${uploadProgress}%` }}
@@ -328,9 +334,9 @@ export function UploadZone({ onUploadComplete }: UploadZoneProps) {
 
                         {/* Error Message */}
                         {error && (
-                            <Alert variant="destructive" className="border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/30 animate-in slide-in-from-bottom-4">
-                                <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-                                <AlertDescription className="text-red-700 dark:text-red-300">
+                            <Alert variant="destructive" className="border-red-900 bg-red-950/50 text-red-400 animate-in slide-in-from-bottom-4">
+                                <AlertCircle className="h-4 w-4 text-red-400" />
+                                <AlertDescription className="text-red-300">
                                     {error}
                                 </AlertDescription>
                             </Alert>
@@ -338,21 +344,21 @@ export function UploadZone({ onUploadComplete }: UploadZoneProps) {
 
                         {/* Success Message */}
                         {success && (
-                            <Alert className="border-green-200 dark:border-green-900 bg-green-50 dark:bg-green-950/30 animate-in slide-in-from-bottom-4">
-                                <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
-                                <AlertDescription className="text-green-700 dark:text-green-300">
+                            <Alert className="border-green-900 bg-green-950/50 animate-in slide-in-from-bottom-4">
+                                <CheckCircle className="h-4 w-4 text-green-400" />
+                                <AlertDescription className="text-green-300">
                                     {success}
                                 </AlertDescription>
                             </Alert>
                         )}
 
                         {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-800">
+                        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-gray-800">
                             <Button
                                 variant="outline"
                                 onClick={removeFile}
                                 disabled={!selectedFile || uploading}
-                                className="w-full sm:w-auto order-2 sm:order-1"
+                                className="w-full sm:w-auto order-2 sm:order-1 border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
                             >
                                 Cancel
                             </Button>
@@ -361,7 +367,7 @@ export function UploadZone({ onUploadComplete }: UploadZoneProps) {
                                 disabled={!selectedFile || uploading}
                                 className={cn(
                                     "w-full sm:w-auto min-w-[180px] relative overflow-hidden group order-1 sm:order-2",
-                                    "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0"
+                                    "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white border-0 shadow-lg shadow-purple-600/20"
                                 )}
                             >
                                 {uploading ? (
@@ -383,39 +389,33 @@ export function UploadZone({ onUploadComplete }: UploadZoneProps) {
 
                 {/* Processing Info Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Card className="border-0 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30">
+                    <Card className="border-0 bg-gradient-to-br from-blue-950/30 to-indigo-950/30">
                         <CardContent className="p-4 flex items-start gap-3">
                             <div className="p-2 bg-blue-500/10 rounded-lg">
-                                <BrainCircuit className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                <BrainCircuit className="h-5 w-5 text-blue-400" />
                             </div>
                             <div>
-                                <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100">AI Processing</h4>
-                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                                <h4 className="font-medium text-sm text-gray-200">AI Processing</h4>
+                                <p className="text-xs text-gray-500 mt-1">
                                     Documents are analyzed using advanced AI to extract entities and relationships
                                 </p>
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card className="border-0 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30">
+                    <Card className="border-0 bg-gradient-to-br from-purple-950/30 to-pink-950/30">
                         <CardContent className="p-4 flex items-start gap-3">
                             <div className="p-2 bg-purple-500/10 rounded-lg">
-                                <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                                <Sparkles className="h-5 w-5 text-purple-400" />
                             </div>
                             <div>
-                                <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100">Knowledge Graph</h4>
-                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                                <h4 className="font-medium text-sm text-gray-200">Knowledge Graph</h4>
+                                <p className="text-xs text-gray-500 mt-1">
                                     All extracted information is connected into an interactive knowledge graph
                                 </p>
                             </div>
                         </CardContent>
                     </Card>
-                </div>
-
-                {/* Background Decoration */}
-                <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
-                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
-                    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-amber-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
                 </div>
             </div>
         </div>

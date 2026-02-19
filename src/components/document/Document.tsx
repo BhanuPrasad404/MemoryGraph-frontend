@@ -258,33 +258,33 @@ export default function DocumentsPage() {
         }
     };
 
-    // Get status badge
+    // Get status badge - Vercel dark theme style
     const getStatusBadge = (status: string) => {
         switch (status) {
             case 'processing':
                 return (
-                    <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs sm:text-sm">
+                    <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-xs sm:text-sm">
                         <Loader2 className="h-3 w-3 animate-spin mr-1" />
                         Processing
                     </Badge>
                 );
             case 'completed':
                 return (
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs sm:text-sm">
+                    <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/20 text-xs sm:text-sm">
                         <CheckCircle className="h-3 w-3 mr-1" />
                         Ready
                     </Badge>
                 );
             case 'failed':
                 return (
-                    <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 text-xs sm:text-sm">
+                    <Badge variant="outline" className="bg-red-500/10 text-red-400 border-red-500/20 text-xs sm:text-sm">
                         <XCircle className="h-3 w-3 mr-1" />
                         Failed
                     </Badge>
                 );
             default:
                 return (
-                    <Badge variant="outline" className="text-xs sm:text-sm">
+                    <Badge variant="outline" className="bg-gray-500/10 text-gray-400 border-gray-500/20 text-xs sm:text-sm">
                         {status}
                     </Badge>
                 );
@@ -297,376 +297,379 @@ export default function DocumentsPage() {
     const failedCount = documents.filter(d => d.status === 'failed').length;
 
     return (
-        <div className="container mx-auto p-3 sm:p-4 md:p-6 max-w-full">
-            {/* Header */}
-            <div className="mb-6 md:mb-8">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8 bg-white dark:bg-gray-950 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
-                    <div className="min-w-0 space-y-1">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 shadow-md shadow-purple-600/20">
-                                <FileText className="h-5 w-5 text-white" />
-                            </div>
-                            <div>
-                                <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 dark:from-blue-400 dark:to-purple-400 bg-clip-text ">
-                                    My Documents
-                                </h1>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                                    <span>View and manage all your uploaded documents</span>
-                                    <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-blue-50 dark:bg-blue-950 text-xs font-medium text-blue-600 dark:text-blue-400">
-                                        {total}
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex gap-3 w-full sm:w-auto">
-                        <Button
-                            variant="outline"
-                            onClick={() => fetchDocuments(true)}
-                            disabled={loading || refreshing}
-                            className="flex-1 sm:flex-none border-gray-200 dark:border-gray-800 hover:border-blue-600/50 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all duration-200 group"
-                            size="default"
-                        >
-                            <RefreshCw className={`h-4 w-4 mr-2 transition-all duration-300 ${refreshing ? 'animate-spin' : 'group-hover:rotate-180'}`} />
-                            <span>Refresh</span>
-                        </Button>
-
-                        <Button
-                            onClick={() => router.push('/upload')}
-                            className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg shadow-purple-600/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95 group"
-                            size="default"
-                        >
-                            <Upload className="h-4 w-4 mr-2 transition-transform duration-300 group-hover:translate-y-[-2px]" />
-                            <span>Upload</span>
-                        </Button>
-                    </div>
-                </div>
-
-                {/* Search and Filter */}
-                <div className="flex flex-col sm:flex-row gap-3 mb-4 md:mb-6">
-                    <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
-                            placeholder="Search documents by name..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-10 h-10 sm:h-11 text-sm sm:text-base"
-                        />
-                    </div>
-                    <div className="flex gap-2">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" className="w-full sm:w-auto h-10 sm:h-11">
-                                    <Filter className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
-                                    <span className="truncate max-w-[120px] sm:max-w-none">
-                                        {filterStatus === 'all' ? 'All Status' : filterStatus.charAt(0).toUpperCase() + filterStatus.slice(1)}
-                                    </span>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-[200px]">
-                                <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => setFilterStatus('all')} className="cursor-pointer">
-                                    All Documents
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setFilterStatus('processing')} className="cursor-pointer">
-                                    <Loader2 className="h-3 w-3 mr-2 animate-spin" />
-                                    Processing
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setFilterStatus('completed')} className="cursor-pointer">
-                                    <CheckCircle className="h-3 w-3 mr-2 text-green-500" />
-                                    Ready
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setFilterStatus('failed')} className="cursor-pointer">
-                                    <XCircle className="h-3 w-3 mr-2 text-red-500" />
-                                    Failed
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                        <Button
-                            variant="ghost"
-                            onClick={() => {
-                                setSearchQuery('');
-                                setFilterStatus('all');
-                            }}
-                            disabled={!searchQuery && filterStatus === 'all'}
-                            className="h-10 sm:h-11"
-                            size="sm"
-                        >
-                            <span className="hidden sm:inline">Clear</span>
-                            <span className="sm:hidden">X</span>
-                        </Button>
-                    </div>
-                </div>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-6 md:mb-8">
-                {/* Total Documents Card */}
-                <Card className="border-0 bg-gradient-to-br from-slate-600 to-slate-800 shadow-md">
-                    <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-xs sm:text-sm text-slate-200 font-medium">Total</p>
-                                <p className="text-lg sm:text-xl md:text-2xl font-bold text-white">{total}</p>
-                            </div>
-                            <div className="p-2 bg-white/20 rounded-lg">
-                                <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Processing Card */}
-                <Card className="border-0 bg-gradient-to-br from-blue-600 to-blue-800 shadow-md">
-                    <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-xs sm:text-sm text-blue-200 font-medium">Processing</p>
-                                <p className="text-lg sm:text-xl md:text-2xl font-bold text-white">{processingCount}</p>
-                            </div>
-                            <div className="p-2 bg-white/20 rounded-lg">
-                                <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 text-white animate-spin" />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Ready/Completed Card */}
-                <Card className="border-0 bg-gradient-to-br from-emerald-600 to-emerald-800 shadow-md">
-                    <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-xs sm:text-sm text-emerald-200 font-medium">Ready</p>
-                                <p className="text-lg sm:text-xl md:text-2xl font-bold text-white">{completedCount}</p>
-                            </div>
-                            <div className="p-2 bg-white/20 rounded-lg">
-                                <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Failed Card */}
-                <Card className="border-0 bg-gradient-to-br from-red-600 to-red-800 shadow-md">
-                    <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-xs sm:text-sm text-red-200 font-medium">Failed</p>
-                                <p className="text-lg sm:text-xl md:text-2xl font-bold text-white">{failedCount}</p>
-                            </div>
-                            <div className="p-2 bg-white/20 rounded-lg">
-                                <XCircle className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-
-            {/* Error Alert */}
-            {error && (
-                <Alert variant="destructive" className="mb-4 md:mb-6">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription className="text-sm">{error}</AlertDescription>
-                </Alert>
-            )}
-
-            {/* Documents Grid */}
-            {loading && offset === 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                        <Card key={i} className="overflow-hidden">
-                            <CardHeader className="pb-3 px-4 sm:px-6">
-                                <Skeleton className="h-5 sm:h-6 w-3/4" />
-                                <Skeleton className="h-4 w-1/2 mt-2" />
-                            </CardHeader>
-                            <CardContent className="px-4 sm:px-6">
-                                <div className="space-y-2">
-                                    <Skeleton className="h-4 w-full" />
-                                    <Skeleton className="h-4 w-2/3" />
-                                    <Skeleton className="h-4 w-1/2" />
+        <div className="min-h-screen bg-black">
+            <div className="container mx-auto p-3 sm:p-4 md:p-6 max-w-full">
+                {/* Header */}
+                <div className="mb-6 md:mb-8">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8 bg-gray-900/50 border border-gray-800 rounded-2xl p-6 backdrop-blur-sm">
+                        <div className="min-w-0 space-y-1">
+                            <div className="flex items-center gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg shadow-blue-600/20">
+                                    <FileText className="h-5 w-5 text-white" />
                                 </div>
-                            </CardContent>
-                            <CardFooter className="px-4 sm:px-6">
-                                <Skeleton className="h-8 sm:h-9 w-full" />
-                            </CardFooter>
-                        </Card>
-                    ))}
-                </div>
-            ) : filteredDocuments.length === 0 ? (
-                <Card className="text-center py-8 sm:py-12">
-                    <CardContent className="px-4 sm:px-6">
-                        <FileUp className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-muted-foreground mb-3 sm:mb-4" />
-                        <h3 className="text-base sm:text-lg font-semibold mb-2">No documents found</h3>
-                        <p className="text-muted-foreground mb-4 sm:mb-6 text-sm sm:text-base">
-                            {searchQuery || filterStatus !== 'all'
-                                ? 'Try adjusting your search or filter'
-                                : 'Upload your first document to get started'}
-                        </p>
-                        <Button onClick={() => router.push('/upload')} size="sm" className="sm:text-base">
-                            <Upload className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
-                            Upload Document
-                        </Button>
-                    </CardContent>
-                </Card>
-            ) : (
-                <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 mb-6 md:mb-8">
-                        {filteredDocuments.map((document) => (
-                            <Card key={document.id} className="hover:shadow-lg transition-shadow flex flex-col h-full">
-                                <CardHeader className="pb-3 px-4 sm:px-6">
-                                    {/* FIXED: Using grid for precise control */}
-                                    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
-                                        {/* File name section - Proper truncation with ellipsis */}
-                                        <div className="min-w-0 overflow-hidden">
-                                            <CardTitle className="text-base sm:text-lg font-semibold">
-                                                <div
-                                                    className="truncate w-full text-ellipsis overflow-hidden whitespace-nowrap"
-                                                    title={document.filename}
-                                                >
-                                                    {document.filename}
-                                                </div>
-                                            </CardTitle>
-                                            <CardDescription className="mt-1">
-                                                {getStatusBadge(document.status)}
-                                            </CardDescription>
-                                        </div>
+                                <div>
+                                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-100">
+                                        My Documents
+                                    </h1>
+                                    <p className="text-sm text-gray-500 flex items-center gap-2">
+                                        <span>View and manage all your uploaded documents</span>
+                                        <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-gray-800 text-xs font-medium text-gray-400">
+                                            {total}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
 
-                                        {/* Dropdown button - Always visible */}
-                                        <div className="flex-shrink-0 relative z-10">
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0 hover:bg-gray-100 ml-auto"
-                                                    >
-                                                        <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end" className="w-[200px] sm:w-[220px]">
-                                                    <DropdownMenuItem
-                                                        onClick={() => router.push(`/documents/${document.id}`)}
-                                                        disabled={document.status !== 'completed'}
-                                                        className="cursor-pointer text-sm sm:text-base"
-                                                    >
-                                                        <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
-                                                        View Details
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                    <DropdownMenuItem
-                                                        onClick={() => handleExport(document.id, document.filename, 'text')}
-                                                        className="cursor-pointer text-sm sm:text-base"
-                                                    >
-                                                        <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
-                                                        Export as Text
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        onClick={() => handleExport(document.id, document.filename, 'csv')}
-                                                        className="cursor-pointer text-sm sm:text-base"
-                                                    >
-                                                        <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
-                                                        Export as CSV
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                    <DropdownMenuItem
-                                                        onClick={() => handleDelete(document.id, document.filename)}
-                                                        disabled={deletingId === document.id}
-                                                        className="cursor-pointer text-red-600 focus:text-red-600 text-sm sm:text-base"
-                                                    >
-                                                        {deletingId === document.id ? (
-                                                            <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2 animate-spin" />
-                                                        ) : (
-                                                            <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
-                                                        )}
-                                                        {deletingId === document.id ? 'Deleting...' : 'Delete'}
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        </div>
-                                    </div>
+                        <div className="flex gap-3 w-full sm:w-auto">
+                            <Button
+                                variant="outline"
+                                onClick={() => fetchDocuments(true)}
+                                disabled={loading || refreshing}
+                                className="flex-1 sm:flex-none border-gray-800 bg-gray-900 text-gray-300 hover:bg-gray-800 hover:text-white hover:border-gray-700 transition-all duration-200 group"
+                                size="default"
+                            >
+                                <RefreshCw className={`h-4 w-4 mr-2 transition-all duration-300 ${refreshing ? 'animate-spin' : 'group-hover:rotate-180'}`} />
+                                <span>Refresh</span>
+                            </Button>
+
+                            <Button
+                                onClick={() => router.push('/upload')}
+                                className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white shadow-lg shadow-purple-600/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95 group"
+                                size="default"
+                            >
+                                <Upload className="h-4 w-4 mr-2 transition-transform duration-300 group-hover:translate-y-[-2px]" />
+                                <span>Upload</span>
+                            </Button>
+                        </div>
+                    </div>
+
+                    {/* Search and Filter */}
+                    <div className="flex flex-col sm:flex-row gap-3 mb-4 md:mb-6">
+                        <div className="relative flex-1">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+                            <Input
+                                placeholder="Search documents by name..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="pl-10 h-10 sm:h-11 text-sm sm:text-base bg-gray-900 border-gray-800 text-gray-100 placeholder:text-gray-600 focus:border-gray-700 focus:ring-1 focus:ring-gray-700"
+                            />
+                        </div>
+                        <div className="flex gap-2">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" className="w-full sm:w-auto h-10 sm:h-11 border-gray-800 bg-gray-900 text-gray-300 hover:bg-gray-800 hover:text-white hover:border-gray-700">
+                                        <Filter className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
+                                        <span className="truncate max-w-[120px] sm:max-w-none">
+                                            {filterStatus === 'all' ? 'All Status' : filterStatus.charAt(0).toUpperCase() + filterStatus.slice(1)}
+                                        </span>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-[200px] bg-gray-900 border-gray-800">
+                                    <DropdownMenuLabel className="text-gray-400">Filter by Status</DropdownMenuLabel>
+                                    <DropdownMenuSeparator className="bg-gray-800" />
+                                    <DropdownMenuItem onClick={() => setFilterStatus('all')} className="cursor-pointer text-gray-300 focus:text-white focus:bg-gray-800">
+                                        All Documents
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setFilterStatus('processing')} className="cursor-pointer text-gray-300 focus:text-white focus:bg-gray-800">
+                                        <Loader2 className="h-3 w-3 mr-2 animate-spin text-blue-400" />
+                                        Processing
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setFilterStatus('completed')} className="cursor-pointer text-gray-300 focus:text-white focus:bg-gray-800">
+                                        <CheckCircle className="h-3 w-3 mr-2 text-green-400" />
+                                        Ready
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setFilterStatus('failed')} className="cursor-pointer text-gray-300 focus:text-white focus:bg-gray-800">
+                                        <XCircle className="h-3 w-3 mr-2 text-red-400" />
+                                        Failed
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                            <Button
+                                variant="ghost"
+                                onClick={() => {
+                                    setSearchQuery('');
+                                    setFilterStatus('all');
+                                }}
+                                disabled={!searchQuery && filterStatus === 'all'}
+                                className="h-10 sm:h-11 border-gray-800 text-gray-400 hover:text-white hover:bg-gray-800"
+                                size="sm"
+                            >
+                                <span className="hidden sm:inline">Clear</span>
+                                <span className="sm:hidden">X</span>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Stats Cards - Keep gradients but adjust for dark theme */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-6 md:mb-8">
+                    {/* Total Documents Card */}
+                    <Card className="border-0 bg-gradient-to-br from-gray-700 to-gray-900 shadow-lg">
+                        <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-xs sm:text-sm text-gray-300 font-medium">Total</p>
+                                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-white">{total}</p>
+                                </div>
+                                <div className="p-2 bg-white/10 rounded-lg">
+                                    <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Processing Card */}
+                    <Card className="border-0 bg-gradient-to-br from-blue-600 to-blue-800 shadow-lg shadow-blue-600/20">
+                        <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-xs sm:text-sm text-blue-200 font-medium">Processing</p>
+                                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-white">{processingCount}</p>
+                                </div>
+                                <div className="p-2 bg-white/20 rounded-lg">
+                                    <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 text-white animate-spin" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Ready/Completed Card */}
+                    <Card className="border-0 bg-gradient-to-br from-emerald-600 to-emerald-800 shadow-lg shadow-emerald-600/20">
+                        <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-xs sm:text-sm text-emerald-200 font-medium">Ready</p>
+                                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-white">{completedCount}</p>
+                                </div>
+                                <div className="p-2 bg-white/20 rounded-lg">
+                                    <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Failed Card */}
+                    <Card className="border-0 bg-gradient-to-br from-red-600 to-red-800 shadow-lg shadow-red-600/20">
+                        <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-xs sm:text-sm text-red-200 font-medium">Failed</p>
+                                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-white">{failedCount}</p>
+                                </div>
+                                <div className="p-2 bg-white/20 rounded-lg">
+                                    <XCircle className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Error Alert */}
+                {error && (
+                    <Alert variant="destructive" className="mb-4 md:mb-6 bg-red-950/50 border-red-800 text-red-400">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription className="text-sm">{error}</AlertDescription>
+                    </Alert>
+                )}
+
+                {/* Documents Grid */}
+                {loading && offset === 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                            <Card key={i} className="overflow-hidden bg-gray-900 border-gray-800">
+                                <CardHeader className="pb-3 px-4 sm:px-6">
+                                    <Skeleton className="h-5 sm:h-6 w-3/4 bg-gray-800" />
+                                    <Skeleton className="h-4 w-1/2 mt-2 bg-gray-800" />
                                 </CardHeader>
-                                <CardContent className="flex-grow px-4 sm:px-6">
-                                    <div className="space-y-2 sm:space-y-3">
-                                        <div className="flex items-center justify-between text-xs sm:text-sm">
-                                            <span className="text-muted-foreground">Size:</span>
-                                            <span className="font-medium truncate pl-2 max-w-[65%]">{formatBytes(document.file_size)}</span>
-                                        </div>
-                                        <div className="flex items-center justify-between text-xs sm:text-sm">
-                                            <span className="text-muted-foreground">Uploaded:</span>
-                                            <span className="font-medium truncate pl-2 max-w-[65%]">{formatDate(document.created_at)}</span>
-                                        </div>
-                                        {document.status === 'completed' && (
-                                            <>
-                                                <div className="flex items-center justify-between text-xs sm:text-sm">
-                                                    <span className="text-muted-foreground">Chunks:</span>
-                                                    <span className="font-medium">{document.num_chunks}</span>
-                                                </div>
-                                                <div className="flex items-center justify-between text-xs sm:text-sm">
-                                                    <span className="text-muted-foreground">Graph Nodes:</span>
-                                                    <span className="font-medium">{document.num_nodes}</span>
-                                                </div>
-                                                <div className="flex items-center justify-between text-xs sm:text-sm">
-                                                    <span className="text-muted-foreground">Connections:</span>
-                                                    <span className="font-medium">{document.num_edges}</span>
-                                                </div>
-                                            </>
-                                        )}
+                                <CardContent className="px-4 sm:px-6">
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-4 w-full bg-gray-800" />
+                                        <Skeleton className="h-4 w-2/3 bg-gray-800" />
+                                        <Skeleton className="h-4 w-1/2 bg-gray-800" />
                                     </div>
                                 </CardContent>
-                                <CardFooter className="pt-4 px-4 sm:px-6">
-                                    <Button
-                                        className="w-full text-sm sm:text-base"
-                                        onClick={() => router.push(`/documents/${document.id}`)}
-                                        disabled={document.status !== 'completed'}
-                                        variant={document.status === 'completed' ? 'default' : 'outline'}
-                                        size="sm"
-                                    >
-                                        {document.status === 'processing' ? (
-                                            <>
-                                                <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2 animate-spin" />
-                                                <span className="truncate">Processing...</span>
-                                            </>
-                                        ) : document.status === 'completed' ? (
-                                            <>
-                                                <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
-                                                <span className="truncate">Explore Document</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <AlertCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
-                                                <span className="truncate">Processing Failed</span>
-                                            </>
-                                        )}
-                                    </Button>
+                                <CardFooter className="px-4 sm:px-6">
+                                    <Skeleton className="h-8 sm:h-9 w-full bg-gray-800" />
                                 </CardFooter>
                             </Card>
                         ))}
                     </div>
-
-                    {/* Load More */}
-                    {hasMore && documents.length >= limit && (
-                        <div className="text-center mt-6 md:mt-8">
-                            <Button
-                                onClick={handleLoadMore}
-                                variant="outline"
-                                disabled={refreshing}
-                                className="min-w-[150px] sm:min-w-[200px] text-sm sm:text-base"
-                                size="sm"
-                            >
-                                {refreshing ? (
-                                    <>
-                                        <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2 animate-spin" />
-                                        Loading...
-                                    </>
-                                ) : (
-                                    'Load More Documents'
-                                )}
+                ) : filteredDocuments.length === 0 ? (
+                    <Card className="text-center py-8 sm:py-12 bg-gray-900 border-gray-800">
+                        <CardContent className="px-4 sm:px-6">
+                            <FileUp className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-gray-700 mb-3 sm:mb-4" />
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-300 mb-2">No documents found</h3>
+                            <p className="text-gray-500 mb-4 sm:mb-6 text-sm sm:text-base">
+                                {searchQuery || filterStatus !== 'all'
+                                    ? 'Try adjusting your search or filter'
+                                    : 'Upload your first document to get started'}
+                            </p>
+                            <Button onClick={() => router.push('/upload')} size="sm" className="sm:text-base bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0">
+                                <Upload className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
+                                Upload Document
                             </Button>
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 mb-6 md:mb-8">
+                            {filteredDocuments.map((document) => (
+                                <Card key={document.id} className="hover:shadow-lg hover:shadow-blue-500/5 transition-all duration-200 flex flex-col h-full bg-gray-900 border-gray-800 hover:border-gray-700">
+                                    <CardHeader className="pb-3 px-4 sm:px-6">
+                                        {/* FIXED: Using grid for precise control */}
+                                        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+                                            {/* File name section - Proper truncation with ellipsis */}
+                                            <div className="min-w-0 overflow-hidden">
+                                                <CardTitle className="text-base sm:text-lg font-semibold text-gray-200">
+                                                    <div
+                                                        className="truncate w-full text-ellipsis overflow-hidden whitespace-nowrap"
+                                                        title={document.filename}
+                                                    >
+                                                        {document.filename}
+                                                    </div>
+                                                </CardTitle>
+                                                <CardDescription className="mt-1">
+                                                    {getStatusBadge(document.status)}
+                                                </CardDescription>
+                                            </div>
+
+                                            {/* Dropdown button - Always visible */}
+                                            <div className="flex-shrink-0 relative z-10">
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0 hover:bg-gray-800 text-gray-400 hover:text-white ml-auto"
+                                                        >
+                                                            <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end" className="w-[200px] sm:w-[220px] bg-gray-900 border-gray-800">
+                                                        <DropdownMenuItem
+                                                            onClick={() => router.push(`/documents/${document.id}`)}
+                                                            disabled={document.status !== 'completed'}
+                                                            className="cursor-pointer text-sm sm:text-base text-gray-300 focus:text-white focus:bg-gray-800"
+                                                        >
+                                                            <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
+                                                            View Details
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator className="bg-gray-800" />
+                                                        <DropdownMenuItem
+                                                            onClick={() => handleExport(document.id, document.filename, 'text')}
+                                                            className="cursor-pointer text-sm sm:text-base text-gray-300 focus:text-white focus:bg-gray-800"
+                                                        >
+                                                            <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
+                                                            Export as Text
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            onClick={() => handleExport(document.id, document.filename, 'csv')}
+                                                            className="cursor-pointer text-sm sm:text-base text-gray-300 focus:text-white focus:bg-gray-800"
+                                                        >
+                                                            <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
+                                                            Export as CSV
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator className="bg-gray-800" />
+                                                        <DropdownMenuItem
+                                                            onClick={() => handleDelete(document.id, document.filename)}
+                                                            disabled={deletingId === document.id}
+                                                            className="cursor-pointer text-red-400 focus:text-red-300 focus:bg-red-950/50 text-sm sm:text-base"
+                                                        >
+                                                            {deletingId === document.id ? (
+                                                                <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2 animate-spin" />
+                                                            ) : (
+                                                                <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
+                                                            )}
+                                                            {deletingId === document.id ? 'Deleting...' : 'Delete'}
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </div>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent className="flex-grow px-4 sm:px-6">
+                                        <div className="space-y-2 sm:space-y-3">
+                                            <div className="flex items-center justify-between text-xs sm:text-sm">
+                                                <span className="text-gray-500">Size:</span>
+                                                <span className="font-medium text-gray-300 truncate pl-2 max-w-[65%]">{formatBytes(document.file_size)}</span>
+                                            </div>
+                                            <div className="flex items-center justify-between text-xs sm:text-sm">
+                                                <span className="text-gray-500">Uploaded:</span>
+                                                <span className="font-medium text-gray-300 truncate pl-2 max-w-[65%]">{formatDate(document.created_at)}</span>
+                                            </div>
+                                            {document.status === 'completed' && (
+                                                <>
+                                                    <div className="flex items-center justify-between text-xs sm:text-sm">
+                                                        <span className="text-gray-500">Chunks:</span>
+                                                        <span className="font-medium text-gray-300">{document.num_chunks}</span>
+                                                    </div>
+                                                    <div className="flex items-center justify-between text-xs sm:text-sm">
+                                                        <span className="text-gray-500">Graph Nodes:</span>
+                                                        <span className="font-medium text-gray-300">{document.num_nodes}</span>
+                                                    </div>
+                                                    <div className="flex items-center justify-between text-xs sm:text-sm">
+                                                        <span className="text-gray-500">Connections:</span>
+                                                        <span className="font-medium text-gray-300">{document.num_edges}</span>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    </CardContent>
+                                    <CardFooter className="pt-4 px-4 sm:px-6">
+                                        <Button
+                                            className="w-full text-sm sm:text-base"
+                                            onClick={() => router.push(`/documents/${document.id}`)}
+                                            disabled={document.status !== 'completed'}
+                                            variant={document.status === 'completed' ? 'default' : 'outline'}
+                                            size="sm"
+                                        >
+                                            {document.status === 'processing' ? (
+                                                <>
+                                                    <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2 animate-spin" />
+                                                    <span className="truncate text-gray-300">Processing...</span>
+                                                </>
+                                            ) : document.status === 'completed' ? (
+                                                <>
+                                                    <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
+                                                    <span className="truncate text-white">Explore Document</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <AlertCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
+                                                    <span className="truncate text-gray-300">Processing Failed</span>
+                                                </>
+                                            )}
+                                        </Button>
+                                    </CardFooter>
+                                </Card>
+                            ))}
                         </div>
-                    )}
-                </>
-            )}
+
+                        {/* Load More */}
+                        {hasMore && documents.length >= limit && (
+                            <div className="text-center mt-6 md:mt-8">
+                                <Button
+                                    onClick={handleLoadMore}
+                                    variant="outline"
+                                    disabled={refreshing}
+                                    className="min-w-[150px] sm:min-w-[200px] text-sm sm:text-base border-gray-800 bg-gray-900 text-gray-300 hover:bg-gray-800 hover:text-white hover:border-gray-700"
+                                    size="sm"
+                                >
+                                    {refreshing ? (
+                                        <>
+                                            <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2 animate-spin" />
+                                            Loading...
+                                        </>
+                                    ) : (
+                                        'Load More Documents'
+                                    )}
+                                </Button>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
         </div>
     );
 }
