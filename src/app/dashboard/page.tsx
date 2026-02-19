@@ -26,8 +26,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 
-
-
 type DocumentStatus = 'completed' | 'processing' | 'failed';
 
 interface Document {
@@ -41,14 +39,20 @@ interface Document {
     num_edges?: number;
 }
 
-
-
 export default function DashboardPage() {
-    const router = useRouter()
+    const router = useRouter();
+    const [hydrated, setHydrated] = useState(false);
     const [tokenLoaded, setTokenLoaded] = useState(false);
 
-    // Proper token loading with redirect
+    // Ensure client-side hydration first
     useEffect(() => {
+        setHydrated(true);
+    }, []);
+
+    // Load token safely after hydration
+    useEffect(() => {
+        if (!hydrated) return;
+
         const timer = setTimeout(() => {
             const token = apiClient.loadToken();
             console.log('[Dashboard] Token loaded:', token);
@@ -59,13 +63,12 @@ export default function DashboardPage() {
             }
 
             setTokenLoaded(true);
-        }, 0); // microtask delay
+        }, 0);
 
         return () => clearTimeout(timer);
-    }, [router]);
+    }, [hydrated, router]);
 
-
-    // Do not run query until token is confirmed
+    // Query documents only when token is confirmed
     const {
         data: documentsData,
         isLoading: documentsLoading,
@@ -74,11 +77,10 @@ export default function DashboardPage() {
         queryKey: ['documents'],
         queryFn: () => apiClient.getDocuments(),
         select: (res) => res.data as Document[],
-        enabled: tokenLoaded, // only enabled when token is loaded
+        enabled: tokenLoaded,
     });
 
     const documents = documentsData ?? [];
-
 
     const stats = useMemo(() => ({
         totalDocuments: documents.length,
@@ -89,8 +91,6 @@ export default function DashboardPage() {
         totalNodes: documents.reduce((sum, doc) => sum + (doc.num_nodes ?? 0), 0),
         totalEdges: documents.reduce((sum, doc) => sum + (doc.num_edges ?? 0), 0),
     }), [documents]);
-
-
 
     const getStatusBadge = (status: DocumentStatus) => {
         const variants = {
@@ -116,7 +116,6 @@ export default function DashboardPage() {
                 icon: AlertCircle,
             },
         };
-
         const variant = variants[status];
         const Icon = variant.icon;
 
@@ -131,14 +130,13 @@ export default function DashboardPage() {
                 </span>
                 <span className="xs:hidden">
                     {status === 'completed' ? 'Done' :
-                        status === 'processing' ? 'Proc' :
-                            'Failed'}
+                        status === 'processing' ? 'Proc' : 'Failed'}
                 </span>
             </Badge>
         );
     };
 
-    if (!tokenLoaded || documentsLoading) {
+    if (!hydrated || !tokenLoaded || documentsLoading) {
         return <DashboardSkeleton />;
     }
 
@@ -149,10 +147,7 @@ export default function DashboardPage() {
         if ((error as AxiosError).isAxiosError) {
             const axiosError = error as AxiosError<{ message?: string }>;
             statusCode = axiosError.response?.status;
-            message =
-                axiosError.response?.data?.message ||
-                axiosError.message ||
-                message;
+            message = axiosError.response?.data?.message || axiosError.message || message;
         } else if (error instanceof Error) {
             message = error.message;
         }
@@ -170,8 +165,8 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="container  mx-auto p-3 sm:p-4 md:p-6 space-y-6 sm:space-y-8 max-w-full">
-            {/* Header */}
+        <div className="container mx-auto p-3 sm:p-4 md:p-6 space-y-6 sm:space-y-8 max-w-full">
+            {/* HEADER */}
             <div className="px-2 sm:px-0">
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Dashboard</h1>
                 <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">
@@ -179,16 +174,13 @@ export default function DashboardPage() {
                 </p>
             </div>
 
-            {/* Stats Cards */}
+            {/* STATS CARDS */}
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-                {/* Documents Card - Blue Gradient */}
+                {/* Documents Card */}
                 <Card className="border-0 overflow-hidden relative group cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
                     style={{ background: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)' }}>
-                    {/* Decorative elements */}
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-700"></div>
                     <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -translate-x-12 translate-y-12 group-hover:scale-150 transition-transform duration-700 delay-100"></div>
-
-                    {/* Content */}
                     <CardHeader className="flex flex-row items-center justify-between pb-2 px-3 sm:px-6 relative">
                         <CardTitle className="text-xs sm:text-sm font-medium text-white/80">Documents</CardTitle>
                         <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur-sm">
@@ -200,16 +192,14 @@ export default function DashboardPage() {
                             <div className="text-2xl sm:text-3xl font-bold text-white">{stats.totalDocuments}</div>
                             <span className="text-xs text-blue-200">total</span>
                         </div>
-
                     </CardContent>
                 </Card>
 
-                {/* Knowledge Chunks Card - Purple Gradient */}
+                {/* Knowledge Chunks Card */}
                 <Card className="border-0 overflow-hidden relative group cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
                     style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)' }}>
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-700"></div>
                     <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -translate-x-12 translate-y-12 group-hover:scale-150 transition-transform duration-700 delay-100"></div>
-
                     <CardHeader className="flex flex-row items-center justify-between pb-2 px-3 sm:px-6 relative">
                         <CardTitle className="text-xs sm:text-sm font-medium text-white/80">Knowledge Chunks</CardTitle>
                         <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur-sm">
@@ -232,12 +222,11 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
 
-                {/* Graph Nodes Card - Green Gradient */}
+                {/* Graph Nodes Card */}
                 <Card className="border-0 overflow-hidden relative group cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
                     style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)' }}>
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-700"></div>
                     <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -translate-x-12 translate-y-12 group-hover:scale-150 transition-transform duration-700 delay-100"></div>
-
                     <CardHeader className="flex flex-row items-center justify-between pb-2 px-3 sm:px-6 relative">
                         <CardTitle className="text-xs sm:text-sm font-medium text-white/80">Graph Nodes</CardTitle>
                         <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur-sm">
@@ -256,12 +245,11 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
 
-                {/* Quick Upload Card - Orange Gradient */}
+                {/* Quick Upload Card */}
                 <Card className="border-0 overflow-hidden relative group cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 col-span-2 lg:col-span-1"
                     style={{ background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)' }}>
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-700"></div>
                     <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -translate-x-12 translate-y-12 group-hover:scale-150 transition-transform duration-700 delay-100"></div>
-
                     <CardHeader className="flex flex-row items-center justify-between pb-2 px-3 sm:px-6 relative">
                         <CardTitle className="text-xs sm:text-sm font-medium text-white/80">Quick Upload</CardTitle>
                         <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur-sm">
