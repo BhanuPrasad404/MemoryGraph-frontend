@@ -1,8 +1,7 @@
-import dynamic from 'next/dynamic';
+'use client';
 
-const DashboardPage = dynamic(
-    () => import('@/components/DashboardPageInner'),
-    { ssr: false } // Important: disables server-side rendering
-);
+import DashboardPageInner from '@/components/DashboardPageInner';
 
-export default DashboardPage;
+export default function DashboardPage() {
+    return <DashboardPageInner />;
+}
