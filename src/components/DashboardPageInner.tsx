@@ -59,7 +59,7 @@ export default function DashboardPage() {
             console.log('[Dashboard] Token loaded:', token);
 
             if (!token) {
-                router.replace('/login');
+                window.location.href = '/dashboard';
                 return;
             }
 
